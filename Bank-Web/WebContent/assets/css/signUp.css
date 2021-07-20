@@ -1,0 +1,42 @@
+@charset "EUC-KR";
+
+.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;   
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+
+.btn-twitter {
+    background-color: #F7E600;
+    color:#3A1D1D;
+    width : 100%;
+}
+
+
+
+#kakaoLog{	
+	width: 20px;
+	height : 20px;
+}
+
+form div.form-group{
+	margin: 15px;
+}
+

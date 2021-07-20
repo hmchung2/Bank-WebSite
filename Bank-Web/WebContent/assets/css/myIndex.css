@@ -1,0 +1,14 @@
+@charset "EUC-KR";
+
+
+
+#index-options a{
+	float: left;
+	height: 100px;
+	width: 100px;
+	font-size: 17px;	
+}
+
+#option-symbol {
+	font-size: 30px;
+}
