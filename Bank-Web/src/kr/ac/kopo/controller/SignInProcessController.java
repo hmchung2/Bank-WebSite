@@ -15,6 +15,8 @@ public class SignInProcessController implements Controller{
 		request.setCharacterEncoding("utf-8");
 		String id       = request.getParameter("login_id");
 		String password = request.getParameter("login_pw");
+		String destination =  request.getParameter("destinationParam");
+		
 		MemberVO member= new MemberVO();		
 		member.setId(id);
 		member.setPwd(password);
@@ -24,17 +26,27 @@ public class SignInProcessController implements Controller{
 		String url = "";
 		String msg = "";		
 		HttpSession session =request.getSession();
+		
+		
+		System.out.println("destination : " +  destination);
+		
+				
 		if(userVO == null){
 			msg = "아이디 또는 패스워드를 잘못 입력하셧습니다.";
 			url = "redirect:/member/signin.do";
 			session.setAttribute("msg", msg);
+			if(destination != null && destination != "") {
+				session.setAttribute("destination", destination);
+			}
 		}else{		
 			msg = userVO.getName() + "님 환영합니다.";
 			url = "redirect:/";
-			session.setAttribute("userVO", userVO);			
-		}
-		
+			session.setAttribute("userVO", userVO);
+			if(destination != null && destination != "") {
+					//url = "redirect:"+ destination;
+					url = destination;
+				}				
+			}					
 		return url;
 	}
-
 }

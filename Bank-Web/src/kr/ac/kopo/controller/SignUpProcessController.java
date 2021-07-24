@@ -17,9 +17,7 @@ public class SignUpProcessController implements Controller {
 		String opt1;
 		String opt2;
 		
-		if( request.getParameter("opt1") != null   ) {
-			
-			
+		if( request.getParameter("opt1") != null   ) {			
 			opt1 = "T";
 		} else {
 			opt1 = "F";

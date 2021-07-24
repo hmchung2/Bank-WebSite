@@ -94,7 +94,7 @@
 			msg = "아이디는 최소 다섯 글자 이상 필요합니다."
 			
 		} else{
-			check = true
+			return true;
 		}
 		$("#sendingMyMsg").text(msg)
 		$("#myModal").trigger("click");
@@ -217,7 +217,7 @@
 	<form action="<%=request.getContextPath() %>/member/signupProcess.do" method="post" onsubmit="return firstValidate()">	
 		
 	<input type="hidden" name="opt1" value="${param.chk3 }">
-	<input type="hidden" name="opt1" value="${param.chk3 }">
+	<input type="hidden" name="opt2" value="${param.chk3 }">
 	
 	<div class="form-group input-group">
 		<div class="input-group-prepend">

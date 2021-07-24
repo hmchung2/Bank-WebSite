@@ -12,8 +12,13 @@ public class SignInController implements Controller{
 		HttpSession session = request.getSession(true);
 		String msg = (String) session.getAttribute("msg");
 		session.removeAttribute("msg");
-		request.setAttribute("previous_msg", msg);	
+		request.setAttribute("previous_msg", msg);
+		
+		String destination = (String) session.getAttribute("destination");
+		session.removeAttribute("destination");
+		request.setAttribute("destination", destination);		
 		// TODO Auto-generated method stub
+		
 		return "/member/signIn.jsp";
 	}
 }

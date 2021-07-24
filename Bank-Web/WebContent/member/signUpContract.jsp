@@ -188,24 +188,22 @@
                         <li class="checkBtn">
                             <input type="checkbox" name="chk4">
                         </li>
-                    </ul>
- 
+                    </ul> 
                 </li>
             </ul>
             <ul class="footBtwrap clearfix">
                 <li><button class="fpmgBt1">취소</button></li>
                 <li><button class="fpmgBt2" id="confirm-btn">확인</button></li>
             </ul>
-        </form>
-        
+        </form>        
 			</div>
 		</section>
-
 	</main><!-- End #main -->
 
   <footer id="footer">
+  	<br>
   	<jsp:include page="/include/footer.jsp" />
-  </footer><!-- End Footer -->
+  </footer>
 
    
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

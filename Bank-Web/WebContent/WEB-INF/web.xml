@@ -10,7 +10,7 @@
 		<servlet-class>kr.ac.kopo.FrontControllerServlet</servlet-class>
 		<init-param>
 			<param-name>propertyLocation</param-name>
-			<param-value>C:\\Users\\hmchu\\Bank-Website\\Bank-Web\\bean.properties</param-value>			             
+			<param-value>C:\\Users\\hmchu\\git\\Bank-WebSite\\Bank-Web\\bean.properties</param-value>			             
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -26,4 +26,9 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+	<context-param>
+		<param-name>kakaoApiKey</param-name>
+		<param-value>608658f5fcb61e9c594a600e980688e0</param-value>
+	</context-param>
+	
 </web-app>

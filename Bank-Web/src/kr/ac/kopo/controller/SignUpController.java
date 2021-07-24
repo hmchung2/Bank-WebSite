@@ -9,8 +9,6 @@ public class SignUpController implements Controller {
 	public String handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("utf-8");
-		String chk3 = checkNull(request.getParameter("chk3"));
-		String chk4 = checkNull(request.getParameter("chk4"));
 
 		return "/member/signUp.jsp";				
 		

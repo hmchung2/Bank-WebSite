@@ -95,16 +95,22 @@
 
         <div class="row">
 
-          <div class="col-lg-2 col-md-4 col-6">
+          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
             <img src="assets/img/clients/client-1.png" class="img-fluid" alt="" data-aos="zoom-in">
+    		<br>
+            본성은행
           </div>
 
-          <div class="col-lg-2 col-md-4 col-6">
+          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
             <img src="assets/img/clients/client-2.png" class="img-fluid" alt="" data-aos="zoom-in" data-aos-delay="100">
+            <br>
+            민기은행
           </div>
 
-          <div class="col-lg-2 col-md-4 col-6">
+          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
             <img src="assets/img/clients/client-3.png" class="img-fluid" alt="" data-aos="zoom-in" data-aos-delay="200">
+            <br>
+            민영은행
           </div>
 
           <div class="col-lg-2 col-md-4 col-6">
