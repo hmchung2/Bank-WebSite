@@ -3,10 +3,42 @@ package kr.ac.kopo.member;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
+import kr.ac.kopo.account.AccountVO;
 import kr.ac.kopo.util.ConnectionFactory;
 
 public class MemberDao {
+	
+	public List<TotalMemberVO> selectAllTotal(String id){
+		List<TotalMemberVO> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT  TOTAL_ID, ID , TOTAL_NICK , TOTAL_PWD, OPT1 , OPT2 , REG_DATE ");
+		sql.append("  FROM WC_TOTAL_USER@WCLINK ");
+		sql.append(" WHERE ID = ?  ORDER BY REG_DATE DESC");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {			
+			pstmt.setString(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				TotalMemberVO tmember = new TotalMemberVO();
+				tmember.setTotalId(rs.getString("TOTAL_ID" ) );
+				tmember.setId(rs.getString("ID")  );
+				tmember.setTotalNick(rs.getString("TOTAL_NICK"));				
+				tmember.setTotalPwd(rs.getString("TOTAL_PWD"));
+				tmember.setOpt1(rs.getString("OPT1"));
+				tmember.setOpt2(rs.getString("OPT2"));
+				tmember.setRegDate(rs.getString("REG_DATE"));
+				list.add(tmember);
+			} 				
+		}catch (Exception e) {
+			e.printStackTrace();
+		}				
+		
+		return list;
+	}
+	
 
 	//중복 확인용 ajax checkId 파일 에서 사용
 	public String checkId(String id) {
@@ -29,8 +61,75 @@ public class MemberDao {
 		return result;
 	}
 	
+	public String checkTotalId(String totalId) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from wc_total_user@wclink ");
+		sql.append(" where total_id = ? ");
+		String result = "0";
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+
+		) {
+			pstmt.setString(1, totalId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = "1";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public boolean validateTotalUser(String totalId , String totalPwd , String id) {
+		Boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from wc_total_user@wclink ");
+		sql.append(" where total_id = ? and total_pwd = ? and id =? ");
+
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+
+		) {
+			pstmt.setString(1, totalId);
+			pstmt.setString(2, totalPwd);
+			pstmt.setString(3, id);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = true;
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return result;
+	}
 	
 	
+	public boolean totalSignUp(TotalMemberVO member) {
+		Boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO WC_TOTAL_USER@WCLINK (TOTAL_ID , ID, TOTAL_NICK , TOTAL_PWD , OPT1,  OPT2 )");
+		sql.append(" VALUES (? , ? , ? , ? , ? , ? )");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		) {
+			int loc = 1;
+			pstmt.setString(loc++, member.getTotalId() );
+			pstmt.setString(loc++, member.getId() );
+			pstmt.setString(loc++, member.getTotalNick());
+			pstmt.setString(loc++, member.getTotalPwd());
+			pstmt.setString(loc++, member.getOpt1());
+			pstmt.setString(loc++, member.getOpt2());
+			int rowCnt = pstmt.executeUpdate();
+			if(rowCnt == 1) {
+				result = true;
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}			
+		return result;
+	}
+			
 	public boolean signUp(MemberVO member) {
 		Boolean result = false;
 		StringBuilder sql = new StringBuilder();

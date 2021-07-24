@@ -16,6 +16,74 @@ import kr.ac.kopo.util.JDBCClose;
 public class AccountDAO {
 
 	
+
+	
+	public MemberVO getUserByID(String id , String BankName) {
+		MemberVO  memberVO = null;
+		if(BankName.equals("700")) {
+			memberVO = getWCUserByID(id);
+			System.out.println("700 bank user table");
+		}		
+		return memberVO ;
+	}
+	
+	public AccountVO selectAccount(String accNum , String bankName) {
+		AccountVO account = null;
+		if(bankName.equals("700")) {
+			account = selectWCAccount(accNum);			
+		}						
+		return account;		
+	}
+	
+	
+	public boolean insertDepositLog(Connection  conn , String bankName ,  String otherBankName,  String accNum , String otherAccNum,   int amount , int preBal   ) throws SQLException {
+		boolean result = false;
+		if(bankName.equals("700")) {
+			result = insertWCDepositLog(conn , otherBankName , accNum , otherAccNum , amount  , preBal);			
+			}			
+		return result;
+		}		
+		
+	
+	public boolean insertWithdrawLog(Connection conn , String bankName , String otherBankName , String accNum , String otherAccNum , int amount , int preBal) throws SQLException {
+		boolean result = false;
+		if(bankName.equals("700")) {		
+			result = insertWCWithdrawLog(conn,  otherBankName,  accNum , otherAccNum , amount , preBal);
+		}		
+		return result;
+	}
+
+	public boolean withdraw(Connection conn ,  String bankName, String accNum , int amount) throws SQLException {
+		boolean result = false;
+		if(bankName.equals("700")) {
+			System.out.println("wc withdraw");			
+			result = wcWithdraw( conn, accNum , amount);			
+		}		
+		return result;
+	}	
+	public boolean deposit(Connection conn , String bankName, String accNum , int amount) throws SQLException {
+		boolean result = false;
+		if(bankName.equals("700")) {
+			System.out.println("wc deposit");
+			result = wcDeposit(conn, accNum, amount);
+			
+		}		
+		return result;
+	}	
+	
+	
+	public boolean insertTotalAccount(AccountVO account, String bankName , String totalId ) {
+		Boolean result = false;
+		if(bankName.equals("700")) {
+			result = insertTotalWCAccount(account, totalId);			
+		}				
+		return result;
+	}
+	
+
+	
+	//////////////////////////////////////////
+	
 	public boolean checkSameAcc(String newAccNum) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from WC_ACCOUNT@WCLINK ");
@@ -35,18 +103,10 @@ public class AccountDAO {
 		return false;
 	}
 	
-	public MemberVO getUserByID(String id , String BankName) {
-		MemberVO  memberVO = null;
-		if(BankName.equals("700")) {
-			memberVO = getWCUserByID(id);
-			System.out.println("700 bank user table");
-		}		
-		return memberVO ;
-	}
 	public MemberVO getWCUserByID(String id) {
 		MemberVO memberVO = null;
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT NAME , PHONE , EMAIL , OPT1 , OPT2");
+		sql.append("SELECT NAME , PHONE , EMAIL ,  OPT1 , OPT2, SSN");
 		sql.append("  FROM WC_USER@WCLINK ");
 		sql.append(" WHERE ID = ?");
 		try (Connection conn = new ConnectionFactory().getConnection();
@@ -59,7 +119,8 @@ public class AccountDAO {
 				memberVO.setPhone(rs.getString("PHONE"));
 				memberVO.setEmail(rs.getString("EMAIL"));
 				memberVO.setOpt1(rs.getString("OPT1"));
-				memberVO.setOpt2(rs.getString("OPT2"));				
+				memberVO.setOpt2(rs.getString("OPT2"));
+				memberVO.setSsn(rs.getString("SSN"));   /// 다른 은행에서도 필수로 갖고와야함.
 			}			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -69,6 +130,41 @@ public class AccountDAO {
 	
 	
 	
+	
+	
+	
+	
+	public boolean wcDeposit(Connection conn, String accNum , int amount) throws SQLException{
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("update WC_ACCOUNT@WCLINK");
+		sql.append(" set ACC_BALANCE = ACC_BALANCE + ? where ACC_NUM = ? ");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("wc Deposit worked");
+		}		
+		return result;
+	}
+		
+	public boolean wcWithdraw(Connection conn , String accNum , int amount) throws SQLException {
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("update WC_ACCOUNT@WCLINK");
+		sql.append(" set ACC_BALANCE = ACC_BALANCE - ? where ACC_NUM = ? ");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("wcWithdraw worked");
+		}		
+		return result;
+	}	
 	
 	public List<AccountVO> selectAllAccounts(String id){
 		List<AccountVO> list = new ArrayList<>();
@@ -99,14 +195,32 @@ public class AccountDAO {
 		
 	}
 	
-	public AccountVO selectAccount(String accNum , String bankName) {
-		AccountVO account = null;
-		if(bankName.equals("700")) {
-			account = selectWCAccount(accNum);			
-		}		
-				
-		return account;		
+	
+	public List<TotalAccountVO> selectAllTotalAccounts(String totalId){
+		List<TotalAccountVO> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT  BANK_NAME , ACC_NUM, TOTAL_ID , REG_DATE");
+		sql.append(" FROM WC_TOTAL_ACCOUNT@WCLINK ");
+		sql.append(" WHERE TOTAL_ID = ?  ORDER BY REG_DATE DESC");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {	
+			pstmt.setString(1, totalId);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				TotalAccountVO totalAccount = new TotalAccountVO();
+				totalAccount.setBankName(rs.getString("BANK_NAME"));
+				totalAccount.setAccNum(rs.getString("ACC_NUM"));
+				totalAccount.setTotalId(totalId);
+				totalAccount.setRegDate(rs.getString("REG_DATE"));
+				list.add(totalAccount);				
+			}
+		}	catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return list;		
 	}
+	
+
 	
 	public AccountVO selectWCAccount(String accNum) {
 		AccountVO account = null;
@@ -121,7 +235,7 @@ public class AccountDAO {
 			ResultSet rs = pstmt.executeQuery();
 			if(rs.next()) {
 				account = new AccountVO() ;
-				account.setId(rs.getString("ID"));
+				account.setId(rs.getString("ID"));   //이거 꼭 갖고 와야 한다.
 				account.setAccNum(rs.getString("ACC_NUM"));
 				account.setNick(rs.getString("NICK"));
 				account.setAccPwd(rs.getString("ACC_PWD"));
@@ -158,7 +272,6 @@ public class AccountDAO {
 			int rowCnt = pstmt.executeUpdate();
 			if(rowCnt == 1) {
 				return true;
-				// else{  roll back } 만들어야함. 하지만 너무 바빠서 스킵
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -166,7 +279,27 @@ public class AccountDAO {
 		return false;
 	}
 
-
+	public boolean insertTotalWCAccount(AccountVO account, String totalId) {
+		Boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO WC_TOTAL_ACCOUNT@WCLINK (BANK_NAME , ACC_NUM , TOTAL_ID  )");
+		sql.append(" VALUES(? , ? , ?  )");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+			
+			pstmt.setString(1, "700"  );
+			pstmt.setString(2, account.getAccNum() );
+			pstmt.setString(3, totalId );
+			int rowCnt = pstmt.executeUpdate();
+			if(rowCnt == 1) {
+				return true;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return result;
+	}
+	
 	
 	public boolean insertWCWithdrawLog(Connection conn , String otherBankName , String accNum , String otherAccNum , int amount ,  int preBal ) throws SQLException {
 		boolean result = false;
@@ -214,23 +347,6 @@ public class AccountDAO {
 		return result;
 	}
 	
-	public boolean insertDepositLog(Connection  conn , String bankName ,  String otherBankName,  String accNum , String otherAccNum,   int amount , int preBal   ) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {
-			result = insertWCDepositLog(conn , otherBankName , accNum , otherAccNum , amount  , preBal);			
-			}			
-		return result;
-		}		
-		
-	
-	public boolean insertWithdrawLog(Connection conn , String bankName , String otherBankName , String accNum , String otherAccNum , int amount , int preBal) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {		
-			result = insertWCWithdrawLog(conn,  otherBankName,  accNum , otherAccNum , amount , preBal);
-		}		
-		return result;
-	}
-	
 	public Map<String, String> transaction(String fromBankName ,  String fromAccNum , String toBankName , String toAccNum  , int amount , int fromPreBal , int toPreBal ){
 		Map<String, String> result = new HashMap<String, String>();
 		Connection conn = new ConnectionFactory().getConnection();
@@ -268,52 +384,5 @@ public class AccountDAO {
 				
 		return result ;
 	}	
-	public boolean withdraw(Connection conn ,  String bankName, String accNum , int amount) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {
-			System.out.println("wc withdraw");			
-			result = wcWithdraw( conn, accNum , amount);			
-		}		
-		return result;
-	}	
-	public boolean deposit(Connection conn , String bankName, String accNum , int amount) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {
-			System.out.println("wc deposit");
-			result = wcDeposit(conn, accNum, amount);
-			
-		}		
-		return result;
-	}	
-	public boolean wcDeposit(Connection conn, String accNum , int amount) throws SQLException{
-		boolean result = false;
-		StringBuilder sql = new StringBuilder();
-		sql.append("update WC_ACCOUNT@WCLINK");
-		sql.append(" set ACC_BALANCE = ACC_BALANCE + ? where ACC_NUM = ? ");
-		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-		pstmt.setInt(1,amount);
-		pstmt.setString(2, accNum);
-		int cnt = pstmt.executeUpdate();
-		if(cnt ==  1) {
-			result = true;
-			System.out.println("wc Deposit worked");
-		}		
-		return result;
-	}
 		
-	public boolean wcWithdraw(Connection conn , String accNum , int amount) throws SQLException {
-		boolean result = false;
-		StringBuilder sql = new StringBuilder();
-		sql.append("update WC_ACCOUNT@WCLINK");
-		sql.append(" set ACC_BALANCE = ACC_BALANCE - ? where ACC_NUM = ? ");
-		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-		pstmt.setInt(1,amount);
-		pstmt.setString(2, accNum);
-		int cnt = pstmt.executeUpdate();
-		if(cnt ==  1) {
-			result = true;
-			System.out.println("wcWithdraw worked");
-		}		
-		return result;
-	}	
 }

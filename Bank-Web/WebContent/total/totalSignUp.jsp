@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>WAndC 은행 로그인</title>
+  <title>WAndC 통합계좌 가입</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -45,123 +45,111 @@
 
 <script>
 
+
 	$(document).ready(function() {
 		$('#myMsg').hover(function() {
-			$(this).css("color" , "white")
+			$(this).css("color", "white")
 		}, function() {
 			$(this).css("color", "#3A1D1D")
 		})
-	
-		
-		$('#selectEmail').change(function() {
-			$("#selectEmail option:selected").each(function() {
-				if ($(this).val() == '1') { //직접입력일 경우 
-					$("#str_email02").val(''); //값 초기화 
-					$("#str_email02").attr("disabled", false); //활성화 
-				} else { //직접입력이 아닐경우 
-					$("#str_email02").val($(this).text()); //선택값 입력 
-					$("#str_email02").attr("disabled", true); //비활성화 
-				}
-			});
+
+		$("#myModal").click(function() {
+			$(".modal").fadeIn();
 		});
-		
-		  $("#myModal").click(function(){
-			    $(".modal").fadeIn();
-		  });
-		  
-		  $(".exiting").click(function(){
-			  $(".modal").fadeOut();
-		  })	
+
+		$(".exiting").click(function() {
+			$(".modal").fadeOut();
+		})
 	})
 
-	function firstValidate() {	
+	function firstValidate() {
 		let check = false;
 		let msg = ""
 		
-		if(idChk == "false"){
+
+		if (idChk == "false") {
 			msg = "아이디 중복확인이 필요합니다."
-			alert(idChk)
+		} else if($("#ssn").val() != '${userVO.ssn}'  ){
+			msg = "사용자 주민번호랑 일치 하지 않습니다."			
+		}else if($('#userPw').val() !='${userVO.pwd}' ){
+			alert('${userVO.pwd}')
+			alert($('#userPw').val() )
+			msg = "사용 아이디의 비밀번호랑 일치 하지 않습니다."
 		}
-		else if($("#pw1").val() == "" ){
-			msg = "비밀번호를 입력 바랍니다."			
-		}
-		else if($('#pw1').val().length < 5 ){
-			msg = "비밀번호는 최소 다섯 글자 이상 필요 합니다."			
-		}
-		else if ($("#pw1").val() != $("#pw2").val()) {
-			msg = "비빌번호를 정확히 재입력 바랍니다."		
-		} else if($("#id_id").legnth < 5 ){
+		  else if ($("#pw1").val() == "") {
+			msg = "비밀번호를 입력 바랍니다."
+		} else if ($('#pw1').val().length < 5) {
+			msg = "비밀번호는 최소 다섯 글자 이상 필요 합니다."
+		} else if ($("#pw1").val() != $("#pw2").val()) {
+			msg = "비빌번호를 정확히 재입력 바랍니다."
+		} else if ($("#id_id").legnth < 5) {
 			msg = "아이디는 최소 다섯 글자 이상 필요합니다."
-			
-		} else{
+		} else {
 			return true;
 		}
 		$("#sendingMyMsg").text(msg)
 		$("#myModal").trigger("click");
-			
 		return check
 	}
 
-	function requestMsg(){
-		
+	function requestMsg() {
+
 		var param = document.getElementById("id_id")
 		var hiddenDiv = document.getElementById("MyhiddenMsg")
 		param = param.value
 
-		if (param.length < 5){
+		if (param.length < 5) {
 			alert("아이디는 5글자 이상 필요합니다.")
 			hiddenDiv.innerText = "아이디는 5글자 이상 필요합니다."
-	
-			
-		} else{
+
+		} else {
 			/// 1 단계 : XMLHttpReuquest 객체 생성
-			if(window.XMLHttpRequest)
+			if (window.XMLHttpRequest)
 				httpRequest = new XMLHttpRequest()
-			else if(window.ActiveXObject)
+			else if (window.ActiveXObject)
 				httpRequest = new ActiveXObject("Microsoft.XMLHTTP")
 			else
 				httpReuqest = null;
 			// 2단계 : callback 함수 호출
-			httpRequest.onreadystatechange = responseMsg	
+			httpRequest.onreadystatechange = responseMsg
 			// 3단계 : 서버에 비동기 요청
-		
-			httpRequest.open('GET' , '/Bank-Web/ajax/checkId?chkId=' + param , true)
-			httpRequest.send(null)			
-		}		
-	}	
-	let httpRequest =null
+			httpRequest.open('GET', '/Bank-Web/ajax/checkTotalId?chkId=' + param,
+					true)
+			httpRequest.send(null)
+		}
+	}
+	let httpRequest = null
 	let idChk = "false"
-	
-	
-	function responseMsg(){		
-		if(httpRequest.readyState == 4){
-			if(httpRequest.status == 200){
+
+	function responseMsg() {
+		if (httpRequest.readyState == 4) {
+			if (httpRequest.status == 200) {
 				//var msg_id = document.getElementById("msgView");
 				//msg_id.innerHTML += httpRequest.responseText;	
 				let jsonResult = JSON.parse(httpRequest.responseText)
 				sameID = jsonResult.result
 				var hiddenDiv = document.getElementById("MyhiddenMsg")
-				if( sameID == 0) {					
+				if (sameID == 0) {
 					idChk = "true"
-					hiddenDiv.innerText = jsonResult.chkId +  " 는 사용 가능한 아이디 입니다."
-					$('#MyhiddenMsg').css("color", "green")
-				}else{
+					hiddenDiv.innerText = jsonResult.chkId
+							+ " 는 사용 가능한 아이디 입니다."
+					$("#MyhiddenMsg").css("color" , "green")
+				} else {
 					idChk = "false"
-					hiddenDiv.innerText = jsonResult.chkId +  " 는 이미 사용중인 아이디 입니다."
-					$('#MyhiddenMsg').css("color", "red")
-				}	
-			}			
+					hiddenDiv.innerText = jsonResult.chkId
+							+ " 는 이미 사용중인 아이디 입니다."
+				}
+				hiddenDiv.hidden = false
+			}
 		}
 	}
-	
-	function idChanged(){
-		var hiddenDiv = document.getElementById("MyhiddenMsg")
-		hiddenDiv.innerText = "중복 확인이 필요 합니다."
-		$('#MyhiddenMsg').css("color", "red")
-		idChk = "false"
-			
-	}
 
+	function idChanged() {
+		var hiddenDiv = document.getElementById("MyhiddenMsg")
+		$('#MyhiddenMsg').css("color" , "red")
+		hiddenDiv.innerText = "중복확인이 필요 합니다."
+		idChk = "false"
+	}
 </script>
 
 
@@ -204,18 +192,13 @@
 
     
 <article class="card-body mx-auto" style="width: 39%;">
-	<h4 class="card-title mt-3 text-center">Create Account</h4>
-	<p class="text-center">Get started with your free account</p>
-	<p>
-		<a href="" class="btn btn-block btn-twitter" id="myMsg"> <img id="kakaoLog" src="<%=request.getContextPath()%>/assets/img/kakaoLogo.jpg">카카오로 로그인</a>	
-	</p>
-
-	
+	<h4 class="card-title mt-3 text-center">통합 계좌 생성</h4>
+	<p class="text-center">타 은행 관리를 동시에 해보세요</p>	
 	<p class="divider-text">
-        <span class="bg-light">OR</span>
+        <span class="bg-light">정보 입력</span>
     </p>
 
-	<form action="<%=request.getContextPath() %>/member/signupProcess.do" method="post" onsubmit="return firstValidate()">	
+	<form action="<%=request.getContextPath() %>/total/totalSignupProcess.do" method="post" onsubmit="return firstValidate()">	
 		
 	<input type="hidden" name="opt1" value="${param.chk3 }">
 	<input type="hidden" name="opt2" value="${param.chk3 }">
@@ -228,72 +211,31 @@
         <input type="button" class="btn btn-primary" value="중복 확인" onclick="requestMsg()" style="width:37%;">
     </div> <!-- form-group// -->
     
-    <div id="MyhiddenMsg" style="color:red;">중복 확인이 필요 합니다.</div>
-    
-    <div class="form-group input-group">
+    <div id="MyhiddenMsg" style="color:red;">
+    	중복확인이 필요 합니다.
+    </div>
+
+	<div class="form-group input-group">
 		<div class="input-group-prepend">
-		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-		 </div>
-        <input name="last-name" class="form-control" placeholder="성" type="text">
-    </div> <!-- form-group// -->
-    
-    
-    <div class="form-group input-group">
-		<div class="input-group-prepend">
-		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-		 </div>
-        <input name="first-name" class="form-control" placeholder="이름" type="text">
-    </div> <!-- form-group// -->
-    
-    
-    <div class="form-group input-group">
-    	<div class="input-group-prepend">
-		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
-		 </div>
-        <input type="text" name=str_email01 class="form-control" id="inlineFormInput" placeholder="이메일">
-        <div class="input-group-text">@</div>
-       <input type="text" name="str_email02" id="str_email02"
-							style="width: 30%;" disabled value="naver.com"> <select
-							style="width: 20%; margin-right: 0px" name="selectEmail"
-							id="selectEmail">
-							<option value="1">직접입력</option>
-							<option value="naver.com" selected>naver.com</option>
-							<option value="hanmail.net">hanmail.net</option>
-							<option value="hotmail.com">hotmail.com</option>
-							<option value="nate.com">nate.com</option>
-							<option value="yahoo.co.kr">yahoo.co.kr</option>
-							<option value="empas.com">empas.com</option>
-							<option value="dreamwiz.com">dreamwiz.com</option>
-							<option value="freechal.com">freechal.com</option>
-							<option value="lycos.co.kr">lycos.co.kr</option>
-							<option value="korea.com">korea.com</option>
-							<option value="gmail.com">gmail.com</option>
-							<option value="hanmir.com">hanmir.com</option>
-							<option value="paran.com">paran.com</option>
-						</select>         
-    </div> <!-- form-group// -->
-    <div class="form-group input-group">
-    	<div class="input-group-prepend">
-		    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+			<span class="input-group-text"> <i class="fa fa-user"></i>
+			</span>
 		</div>
-		<select name="threeDigits" class="custom-select" style="max-width: 120px;">
-		    <option selected > 010-</option>
-		    <option value="1">012-</option>
-		    <option value="2">031-</option>
-		    <option value="3">017-</option>
-		</select>
-    	<input name="phone" class="form-control" pattern="\d{3,4}-\d{4}" placeholder="핸드폰 번호 : xxxx-xxxx 형식으로 입력하세요" type="tel">
-    </div> <!-- form-group// -->
-
-
-    
-    <div class="form-group input-group">
+		<input name="totalNick" class="form-control" placeholder="통합 계좌 별칭" type="text">
+	</div>
+	<!-- form-group// -->
+	<div class="form-group input-group">
 		<div class="input-group-prepend">
 		    <span class="input-group-text"> <i class="fa fa-id-card"></i> </span>
 		 </div>
-        <input name="ssn" class="form-control" pattern="\d{6}-\d{7}" placeholder="주민등록번호 : xxxxxx-xxxxxxx 형식으로 입력하세요" type="text">
+        <input type="password" id="ssn" name="ssn" class="form-control" pattern="\d{6}-\d{7}" placeholder="주민등록번호 인증 : xxxxxx-xxxxxxx 형식으로 입력하세요" type="text">
     </div> <!-- form-group// -->
-    
+
+    <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+		</div>
+        <input id="userPw" name="userPw" class="form-control" placeholder="사용자 비밀번호 인증" type="password">
+    </div> <!-- form-group// -->
     
 
     <div class="form-group input-group">
@@ -311,13 +253,13 @@
     <div class="form-group">
         <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
     </div> <!-- form-group// -->      
-    <p class="text-center">이미 회원 이십니까? <a href="">로그인</a> </p> 
+    <p class="text-center">이미 계좌가 있으신가요? <a href="">로그인</a> </p> 
 </form>
 </article>
     </section>
 
 <button id="myModal" hidden="true">모달창</button>
-<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -325,9 +267,7 @@
         <button type="button" class="close exiting" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      
-      
+      </div>    
       <div class="modal-body">
       	<img src="<%=request.getContextPath()%>/assets/img/error.png" style="width:250px; height:200px;">
         <p id="sendingMyMsg" style="font-size:30px"></p>

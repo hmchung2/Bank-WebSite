@@ -41,7 +41,6 @@
 </head>
 <body>
 
-
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center">
    	<jsp:include page="/include/header.jsp" />

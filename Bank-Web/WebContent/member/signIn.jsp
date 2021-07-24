@@ -329,7 +329,7 @@ form div.form-group{
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">에러 사항</h5>
+						<h5 class="modal-title">Wells & Clarify</h5>
 						<button type="button" class="close exiting" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -338,7 +338,7 @@ form div.form-group{
 
 
 					<div class="modal-body">
-						<img src="<%=request.getContextPath()%>/assets/img/error.png"
+						<img src="<%=request.getContextPath()%>/assets/img/illustration-6.svg"
 							style="width: 250px; height: 200px;">
 						<p id="sendingMyMsg" style="font-size: 30px"></p>
 					</div>

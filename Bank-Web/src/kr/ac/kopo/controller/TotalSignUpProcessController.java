@@ -6,18 +6,18 @@ import javax.servlet.http.HttpSession;
 
 import kr.ac.kopo.member.MemberDao;
 import kr.ac.kopo.member.MemberVO;
+import kr.ac.kopo.member.TotalMemberVO;
 
-public class SignUpProcessController implements Controller {
+public class TotalSignUpProcessController implements Controller {
 
 	@Override
 	public String handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("utf-8");
 		MemberDao dao = new MemberDao();
-		MemberVO newMember = new MemberVO();
+		TotalMemberVO newMember = new TotalMemberVO();
 		String opt1;
 		String opt2;
-		
 		if( request.getParameter("opt1") != null   ) {			
 			opt1 = "T";
 		} else {
@@ -28,34 +28,30 @@ public class SignUpProcessController implements Controller {
 		} else {
 			opt2 = "F";			
 		}
-
-		String id = request.getParameter("id_id");
-		String pwd = request.getParameter("pw1");
-		String name = request.getParameter("last-name") + request.getParameter("first-name") ;
-		String ssn  = request.getParameter("ssn");
-		String phone = request.getParameter("threeDigits") + request.getParameter("phone");
-		String email = request.getParameter("str_email01") + "@" + request.getParameter("str_email02");
+		HttpSession session =request.getSession();
 		
+		MemberVO userVO = (MemberVO) session.getAttribute("userVO");
+		
+		String id =  userVO.getId();
+		String totalId = request.getParameter("id_id");
+		String totalPwd = request.getParameter("pw1");
+		String totalNick =request.getParameter("totalNick");
+		newMember.setTotalId(totalId);
 		newMember.setId(id);
+		newMember.setTotalNick(totalNick);
+		newMember.setTotalPwd(totalPwd);
 		newMember.setOpt1(opt1);
 		newMember.setOpt2(opt2);
-		newMember.setPwd(pwd);
-		newMember.setName(name);
-		newMember.setSsn(ssn);
-		newMember.setPhone(phone);
-		newMember.setEmail(email);
-		
-		Boolean result = dao.signUp(newMember);
-		HttpSession session =request.getSession();
-		String url = "/member/signin.do";
+		String url = "/total/viewTotal.do";
 		String msg;
+		Boolean result = dao.totalSignUp(newMember);
 		if(result == false) {			
-			msg ="회원가입중 문제가 발생 했습니다.";
+			msg ="통합계좌를 만드는데 있어서 문제가 발생 했습니다.";
 			session.setAttribute("msg", msg);
 		}else {
-			msg ="회원가입 완료 되었습니다.";
+			msg ="통합계좌 생성 완료 되었습니다.";
 			session.setAttribute("msg", msg);			
-		}	
+		}
 		return url;
 	}
 }
