@@ -39,26 +39,6 @@
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> 
  <script src="<%=request.getContextPath()%>/member/kakaoLogin.js"></script>
 
-
-
-<%@ page import="kr.ac.kopo.account.AccountVO" %>
-
-<%
-	// 이 시키들은 곧 지워질거임.
-/* 	request.setAttribute("accNum", "7005013922");
-	//이 시키들은 곧 지워질거임.
-	
-	
-	//이건 이페이지 들오오면서 받기
-	AccountVO fromAccVO = new AccountVO();
-	fromAccVO.setAccNum("7005013922");
-	request.setAttribute("fromAccVO" , fromAccVO); */
-	
-	//	<input style="width:50%;  display:inline;" id="accPwdVal" class="form-control" type="text" placeholder="계좌비밀번호"> 
-	//	<input style="width:50%;  display:inline;" id="sendAmount" class="form-control" type="text" placeholder="거래량 ₩" hidden="true">	
-	
-%>
-
 <script>
 //listButtons
 //<button id="confirmAmount" style="display:inline; width:20%; background-color:white; border-color:#3498db; border-style: dashed; color:#3498db"  hidden="true">확인</button>  		
@@ -97,11 +77,31 @@
  	 		var doneIcon = $("<i></i>")
  	 		doneIcon.addClass("far fa-check-circle")
  	 		doneIcon.css("font-size" , "30px")
- 	 		txt.append(doneIcon)
-	
+ 	 		txt.append(doneIcon)	
  	 		$("#leftButtons").append(txt)
  		}	
  	})
+ 	if('${freePass}' != null && '${freePass}'  == 'true' ){
+ 		accPwdValid = true;
+ 		$('#pwdValid').hide()
+ 		$("#confirmAmount").removeAttr('hidden');
+ 		$("#accPwdVal").hide();
+ 		$("#sendAmount").removeAttr('hidden');
+ 		$("#pwdIcon").hide();
+ 		$("#moneyIcon").removeAttr("hidden");
+ 		var txt = $("<div></div>").text("계좌인증 완료"); 	 		
+ 		txt.css("color", "green")
+ 		txt.css("font-size" , "15px")
+ 		txt.css("display","inline") 		 	 	
+ 		var doneIcon = $("<i></i>")
+ 		doneIcon.addClass("far fa-check-circle")
+ 		doneIcon.css("font-size" , "30px")
+ 		txt.append(doneIcon)	
+ 		$("#leftButtons").append(txt)	
+ 	}
+ 	
+ 	 	
+ 	
  	let toggleState = 1
  	$('#confirmAmount').click(function(){
 		 if(toggleState == 1){
@@ -417,9 +417,9 @@
 			<ul>
                 <li>은행 : &nbsp;<select style="border-color:#3498db; background-color:white; color:#5faee3;" id="toBank">
 					<option value="700" selected>WC 은행</option>
-					<option value="600">본성 은행</option>
-					<option value="500">민영 은행</option>
-					<option value="400">민기 은행</option>
+					<option value="600">세진저축은행</option>
+					<option value="800">MG구마을금고</option>
+					<option value="900">TVA</option>
 				</select></li>
 	            	<li id="rightName"></li>	              
                    	<li>

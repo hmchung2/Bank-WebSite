@@ -157,7 +157,7 @@
 	<div
 		class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
 		<div class="icon-box" data-aos="fade-up" data-aos-delay="200">
-			<form action="<%=request.getContextPath() %>/total/viewEachTotal.do">
+			<form action="<%=request.getContextPath() %>/total/viewEachTotal.do" method="post">
 				<div class="icon">
 					<i class="fas fa-user"></i>
 				</div>

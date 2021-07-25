@@ -203,7 +203,7 @@
 								</ul>
 								<div class="btn-wrap">
 									<a href="#" class="btn-buy">이체 조회</a> <a
-										href="<%=request.getContextPath() %>/bank/transaction.do?accNum=${ account.accNum }&fromBankName=700"
+										href="<%=request.getContextPath() %>/bank/TotalTransaction.do?accNum=${ account.accNum }&fromBankName=${account.bankName }"
 										style="background-color: red; border-color: red;"
 										class="btn-buy">이체 하기</a>
 								</div>
