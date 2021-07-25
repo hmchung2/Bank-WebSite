@@ -23,7 +23,16 @@ public class AccountDAO {
 		if(BankName.equals("700")) {
 			memberVO = getWCUserByID(id);
 			System.out.println("700 bank user table");
-		}		
+		}else if(BankName.equals("600")) {
+			memberVO = getBSUserByID(id);
+			System.out.println("BS bank user table");
+			
+		}else if(BankName.equals("800")) {
+			memberVO = getMGUserByID(id);
+			System.out.println("MG bank user table");
+		}
+		
+		
 		return memberVO ;
 	}
 	
@@ -31,57 +40,72 @@ public class AccountDAO {
 		AccountVO account = null;
 		if(bankName.equals("700")) {
 			account = selectWCAccount(accNum);			
-		}						
+		}else if(bankName.equals("600")) {
+			account =  selectBSAccount(accNum);			
+		}else if(bankName.equals("800")) {
+			account = selectMGAccount(accNum);			
+		}		
 		return account;		
 	}
 	
-	
-	public boolean insertDepositLog(Connection  conn , String bankName ,  String otherBankName,  String accNum , String otherAccNum,   int amount , int preBal   ) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {
-			result = insertWCDepositLog(conn , otherBankName , accNum , otherAccNum , amount  , preBal);			
-			}			
-		return result;
-		}		
-		
-	
-	public boolean insertWithdrawLog(Connection conn , String bankName , String otherBankName , String accNum , String otherAccNum , int amount , int preBal) throws SQLException {
-		boolean result = false;
-		if(bankName.equals("700")) {		
-			result = insertWCWithdrawLog(conn,  otherBankName,  accNum , otherAccNum , amount , preBal);
-		}		
-		return result;
-	}
-
 	public boolean withdraw(Connection conn ,  String bankName, String accNum , int amount) throws SQLException {
 		boolean result = false;
 		if(bankName.equals("700")) {
 			System.out.println("wc withdraw");			
 			result = wcWithdraw( conn, accNum , amount);			
-		}		
+		}else if(bankName.equals("600")) {
+			result = bsWithdraw(conn, accNum, amount);			
+		}else if(bankName.equals("800")) {
+			result = mgWithdraw(conn, accNum, amount);
+		}
+		
 		return result;
-	}	
+	}
+	
+	
 	public boolean deposit(Connection conn , String bankName, String accNum , int amount) throws SQLException {
 		boolean result = false;
 		if(bankName.equals("700")) {
 			System.out.println("wc deposit");
-			result = wcDeposit(conn, accNum, amount);
-			
+			result = wcDeposit(conn, accNum, amount);			
+		}else if(bankName.equals("600")) {			
+			result = bsDeposit(conn, accNum, amount);
+		}else if(bankName.equals("800")) {
+			result = mgWithdraw(conn, accNum, amount);
 		}		
 		return result;
 	}	
 	
 	
-	public boolean insertTotalAccount(AccountVO account, String bankName , String totalId ) {
-		Boolean result = false;
-		if(bankName.equals("700")) {
-			result = insertTotalWCAccount(account, totalId);			
-		}				
+	
+	public boolean insertDepositLog(Connection conn, String bankName, String otherBankName, String accNum,
+			String otherAccNum, int amount, int preBal) throws SQLException {
+		boolean result = false;
+		if (bankName.equals("700")) {
+			result = insertWCDepositLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		} else if (bankName.equals("600")) {
+			result = insertBSDepositLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		} else if(bankName.equals("800")) {
+			result = insertMGDepositLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		}
 		return result;
 	}
+		
 	
+	public boolean insertWithdrawLog(Connection conn, String bankName, String otherBankName, String accNum,
+			String otherAccNum, int amount, int preBal) throws SQLException {
+		boolean result = false;
+		if (bankName.equals("700")) {
+			result = insertWCWithdrawLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		} else if (bankName.equals("600")) {
+			result = insertBSWithdrawLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		} else if (bankName.equals("800")) {
+			result = insertMGWithdrawLog(conn, otherBankName, accNum, otherAccNum, amount, preBal);
+		}
+		return result;
+	}
 
-	
+
 	//////////////////////////////////////////
 	
 	public boolean checkSameAcc(String newAccNum) {
@@ -128,6 +152,53 @@ public class AccountDAO {
 		return memberVO;
 	}
 	
+	public MemberVO getBSUserByID(String id) {
+		MemberVO memberVO = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT RRN, NAME,  EMAIL_ID , EMAIL_DOMAIN , TEL1, TEL2 , TEL3");
+		sql.append(" FROM T_MEMBER@BSLINK ");
+		sql.append(" WHERE ID = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+			pstmt.setString(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String userEmail = rs.getString("EMAIL_ID") + "@"  + rs.getString("EMAIL_DOMAIN");
+				String userPhone = rs.getString("TEL1") + "-" + rs.getString("TEL2") + rs.getString("TEL3");
+				memberVO  = new MemberVO();
+				memberVO.setName(rs.getString("NAME"));
+				memberVO.setPhone(userPhone);
+				memberVO.setEmail(userEmail);
+				memberVO.setSsn(rs.getString("RRN")); 			
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return memberVO;
+	}
+	
+	public MemberVO getMGUserByID(String id) {		
+		MemberVO memberVO = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT REGISTRATION_NUMBER, NAME,  EMAIL , PHONE_NUMBER");
+		sql.append(" FROM BANK_USER@MGLINK ");
+		sql.append(" WHERE U_ID = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+			pstmt.setString(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				memberVO  = new MemberVO();
+				memberVO.setName(rs.getString("NAME"));
+				memberVO.setPhone(rs.getString("PHONE_NUMBER"));
+				memberVO.setEmail(rs.getString("EMAIL"));
+				memberVO.setSsn(rs.getString("REGISTRATION_NUMBER")); 					
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return memberVO;
+	}
 	
 	
 	
@@ -149,7 +220,72 @@ public class AccountDAO {
 		}		
 		return result;
 	}
-		
+	
+	
+	public boolean bsDeposit(Connection conn , String accNum , int amount) throws SQLException{
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE T_ACCOUNT@BSLINK SET BALANCE = BALANCE + ? WHERE regexp_replace(ACC_NO, '[^0-9]', '') = ?");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("bs Deposit worked");
+		}				
+		return result;		
+	}
+	
+	public boolean bsWithdraw(Connection conn , String accNum , int amount) throws SQLException{
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE T_ACCOUNT@BSLINK SET BALANCE = BALANCE - ? WHERE regexp_replace(ACC_NO, '[^0-9]', '') = ?");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("bs withdraw worked");
+		}						
+		return result;
+	}
+	
+	public boolean mgWithdraw(Connection conn , String accNum , int amount) throws SQLException{
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE MG_BANK@MGLINK");
+		sql.append(" SET BALANCE = BALANCE - ?");
+		sql.append(" WHERE regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') = ?");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("MGWithdraw worked");
+		}		
+		return result;		
+	}
+	
+	public boolean mgDeposit(Connection conn , String accNum , int amount) throws SQLException{
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE MG_BANK@MGLINK");
+		sql.append(" SET BALANCE = BALANCE + ?");
+		sql.append(" WHERE regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') = ?");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1,amount);
+		pstmt.setString(2, accNum);
+		int cnt = pstmt.executeUpdate();
+		if(cnt ==  1) {
+			result = true;
+			System.out.println("MGDeposit worked");
+		}		
+		return result;		
+	}
+
 	public boolean wcWithdraw(Connection conn , String accNum , int amount) throws SQLException {
 		boolean result = false;
 		StringBuilder sql = new StringBuilder();
@@ -250,7 +386,59 @@ public class AccountDAO {
 		}		
 		return account;		
 	}
+	
+	public AccountVO selectMGAccount(String accNum) {
+		AccountVO account = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT U_ID,  regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') AS ACC_NUM ,");
+		sql.append(" BALANCE , ACCOUNT_REG_DATE , ACCOUNT_NICKNAME");
+		sql.append("  FROM MG_BANK@MGLINK ");
+		sql.append(" WHERE regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {			
+			pstmt.setString(1, accNum);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				account = new AccountVO();
+				account.setId(rs.getString("U_ID"));
+				account.setAccNum(rs.getString("ACC_NUM"));
+				account.setNick(rs.getString("ACCOUNT_NICKNAME"));
+				account.setAccBalance(rs.getInt("BALANCE"));
+				account.setRegDate(rs.getString("ACCOUNT_REG_DATE"));
+			}			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}						
+		return account;		
+	}
+	
 
+	public AccountVO selectBSAccount(String accNum) {
+		AccountVO account = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT ID, regexp_replace(ACC_NO, '[^0-9]', '') AS ACC_NUM , ACC_NICKNAME , ACC_PW , BALANCE, ACC_CREATING_DATE");
+		sql.append("  FROM T_ACCOUNT@BSLINK ");
+		sql.append(" WHERE regexp_replace(ACC_NO, '[^0-9]', '') = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+			
+			pstmt.setString(1, accNum);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				account = new AccountVO() ;
+				account.setId(rs.getString("ID"));
+				account.setAccNum(rs.getString("ACC_NUM"));
+				account.setNick(rs.getString("ACC_NICKNAME"));
+				account.setAccPwd(rs.getString("ACC_PW"));
+				account.setAccBalance(rs.getInt("BALANCE"));
+				account.setRegDate(rs.getString("ACC_CREATING_DATE"));			
+				}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}		
+			
+		return account;		
+	}
 	
 
 	public boolean createAcc(AccountVO acc) {
@@ -279,7 +467,7 @@ public class AccountDAO {
 		return false;
 	}
 
-	public boolean insertTotalWCAccount(AccountVO account, String totalId) {
+	public boolean insertTotalWCAccount(AccountVO account, String totalId, String bankName) {
 		Boolean result = false;
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO WC_TOTAL_ACCOUNT@WCLINK (BANK_NAME , ACC_NUM , TOTAL_ID  )");
@@ -287,7 +475,7 @@ public class AccountDAO {
 		try (Connection conn = new ConnectionFactory().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
 			
-			pstmt.setString(1, "700"  );
+			pstmt.setString(1, bankName );
 			pstmt.setString(2, account.getAccNum() );
 			pstmt.setString(3, totalId );
 			int rowCnt = pstmt.executeUpdate();
@@ -299,6 +487,9 @@ public class AccountDAO {
 		}		
 		return result;
 	}
+	
+	
+	
 	
 	
 	public boolean insertWCWithdrawLog(Connection conn , String otherBankName , String accNum , String otherAccNum , int amount ,  int preBal ) throws SQLException {
@@ -323,13 +514,43 @@ public class AccountDAO {
 		return result;		
 	}
 	
+	public boolean insertBSWithdrawLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		String accNum1 = accNum.substring(0,3) + "-" + accNum.substring(3,6) + "-" + accNum.substring(6,9); 
+		sql.append("INSERT INTO TRANSFER_LOG@BSLINK (SENDING_BANK_NAME, SENDING_ACC_NO, BEFORE_BALANCE, REMITTANCE, AFTER_BALANCE,");
+		sql.append(" RECEIVING_BANK_NAME, RECEIVING_ACC_NO)");
+		sql.append(" VALUES(?, ?, ?, ?, ?, ?, ?)");		
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		int loc = 1;
+		pstmt.setString(loc++, otherBankName );	
+		pstmt.setString(loc++, otherAccNum);
+		pstmt.setInt(loc ++ , preBal);
+		pstmt.setInt(loc++, amount);
+		pstmt.setInt(loc++, preBal - amount);
+		pstmt.setString(loc++,  "600" );
+		pstmt.setString(loc++, accNum1);
+		int rowCnt = pstmt.executeUpdate();
+		if(rowCnt == 1) {
+			result= true;
+			System.out.println("insert Dposit BC log worked");
+		}		
+		return result;
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	public boolean insertWCDepositLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
 		boolean result = false;
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO WC_LOG@WCLINK (ACC_NUM ,  ACTION , AMOUNT , OTHER_ACC_NUM , OTHER_BANK_NAME , PRE_BALANCE  , POST_BALANCE  )");
-		sql.append(" VALUES(? , ? , ? , ? , ? , ? , ?  )");
+		sql.append(" RECEIVING_BANK_NAME, RECEIVING_ACC_NO)");
+		sql.append(" VALUES(?, ?, ?, ?, ?, ?, ?)");	
 		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		int loc = 1;
 		pstmt.setString(loc++, accNum);		
@@ -346,6 +567,83 @@ public class AccountDAO {
 		}
 		return result;
 	}
+	
+	public boolean insertBSDepositLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		String accNum1 = accNum.substring(0,3) + "-" + accNum.substring(3,6) + "-" + accNum.substring(6,9); 
+		sql.append("INSERT INTO TRANSFER_LOG@BSLINK (SENDING_BANK_NAME, SENDING_ACC_NO, BEFORE_BALANCE, REMITTANCE, AFTER_BALANCE,");
+		sql.append(" RECEIVING_BANK_NAME, RECEIVING_ACC_NO)");
+		sql.append(" VALUES (?,  ? ,  ? , ? ,  ? ,  ? ,  ? )");		
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		int loc = 1;
+		pstmt.setString(loc++, otherBankName );	
+		pstmt.setString(loc++, otherAccNum);
+		pstmt.setInt(loc ++ , preBal);
+		pstmt.setInt(loc++, amount);
+		pstmt.setInt(loc++, preBal + amount);
+		pstmt.setString(loc++,  "600" );
+		pstmt.setString(loc++, accNum1);
+		int rowCnt = pstmt.executeUpdate();
+		if(rowCnt == 1) {
+			result= true;
+			System.out.println("insert Dposit BC log worked");
+		}		
+		return result;
+	}
+	
+	
+	public boolean insertMGDepositLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
+		boolean result = false;
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO BANK_ORDERS@MGLINK");
+		sql.append(" VALUES(BANKORDERS_SEQ.NEXTVAL@MGLINK, ? , '이체(입금)' , sysdate , ? ,  ? , ? , (select mid from mg_bank@mglink where regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') = ? )  )  " ); 			
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		int loc = 1;
+		pstmt.setInt(loc++, preBal + amount);
+		System.out.println("problem starts");
+		System.out.println(preBal + amount);
+		pstmt.setString(loc++, otherAccNum);
+		System.out.println(otherAccNum);
+		pstmt.setString(loc++, otherBankName);		
+		System.out.println(otherBankName);
+		pstmt.setInt(loc++, preBal);
+		System.out.println(preBal);
+		pstmt.setString(loc++, accNum);
+		System.out.println(accNum);
+
+		int rowCnt = pstmt.executeUpdate();
+		if(rowCnt == 1) {
+			result= true;
+			System.out.println("insert MGDepositlog worked");
+		}		
+		return result;
+	}
+	
+	
+	public boolean insertMGWithdrawLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
+		boolean result = false;
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO BANK_ORDERS@MGLINK");
+		sql.append(" VALUES(BANKORDERS_SEQ.NEXTVAL@MGLINK, ? , '이체(출금)' , sysdate , ? ,  ? , ? , "  ); 		
+		sql.append(" (select mid from  mg_bank@mglink where regexp_replace(ACCOUNT_NUMBER, '[^0-9]', '') = ? )  )");
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		int loc = 1;
+		pstmt.setInt(loc++, preBal - amount);
+		pstmt.setString(loc++, otherAccNum);
+		pstmt.setString(loc++, otherBankName);
+		pstmt.setInt(loc++, preBal);
+		pstmt.setString(loc++, accNum);
+		int rowCnt = pstmt.executeUpdate();
+		if(rowCnt == 1) {
+			result= true;
+			System.out.println("insert MGDepositlog worked");
+		}				
+		return result;
+	}
+	
+	
 	
 	public Map<String, String> transaction(String fromBankName ,  String fromAccNum , String toBankName , String toAccNum  , int amount , int fromPreBal , int toPreBal ){
 		Map<String, String> result = new HashMap<String, String>();
@@ -384,5 +682,12 @@ public class AccountDAO {
 				
 		return result ;
 	}	
+	
+	public boolean insertTotalAccount(AccountVO account, String bankName , String totalId ) {
+		Boolean result = false;
+		result = insertTotalWCAccount(account, totalId , bankName);									
+		return result;
+	}
+	
 		
 }

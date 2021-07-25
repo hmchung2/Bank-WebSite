@@ -1,6 +1,5 @@
 package kr.ac.kopo.controller;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,7 @@ public class TotalAccountRegisterController implements Controller {
 			} else {
 				MemberVO accountUser = dao.getUserByID(account.getId() , bankName);
 				if (!ssn.equals(accountUser.getSsn() ) ) {
-					msg = "주민등록 번호가 틀렸습니다.";
+					msg = "주민번호가 틀립니다. 다른 사람 계좌 입니다..";
 				} else {
 					if (dao.insertTotalAccount(account, bankName, totalId)) {
 						msg = "true";

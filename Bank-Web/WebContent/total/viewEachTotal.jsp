@@ -127,8 +127,7 @@
         <div class="section-title">
           <h2>${userVO.name }님의 ${totalNick }계정</h2>
 
-          <p>이체 기능 및 이체 역사 조회</p>
-         
+          <p>이체 기능 및 이체 역사 조회</p>      
         </div>							
 				<div class="row">
 					<!-- ======= One Section ======= -->
