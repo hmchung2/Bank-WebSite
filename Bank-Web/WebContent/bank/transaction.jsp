@@ -39,12 +39,26 @@
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> 
  <script src="<%=request.getContextPath()%>/member/kakaoLogin.js"></script>
 
+<style>
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
 <script>
 //listButtons
 //<button id="confirmAmount" style="display:inline; width:20%; background-color:white; border-color:#3498db; border-style: dashed; color:#3498db"  hidden="true">확인</button>  		
-
  $(document).ready(function(){
-
 	 let accPwdValid= false
 	 let sendingAmount = false
 	 let receiver = false
@@ -52,6 +66,9 @@
 	 
 	 let fromPreBalance = '${fromAcc.accBalance}'
 	 let toPreBalance = 0
+	 
+	 $('#loading-motion').hide()
+	 $('#goback').hide()
 	 
 	 
 	 console.log('${fromAcc}')
@@ -130,19 +147,15 @@
 			   toggleState = 1			   
 		 } 		 		
  	})
-
-
  	
     let toggle2 = 1            
     $('#toConfirm').click(function(){
  		if(toggle2 == 1){
  			if( ! /^\d+$/.test($('#toAccNum').val() ) ){
  				$('#rightMsg').html("계좌번호는 숫자로만 입력 해야 합니다.")
- 				$('#rightMsg').show();
 						
  			}else if($('#toAccNum').val().length < 5  ){
  				$('#rightMsg').html("계좌번호가 너무 짧습니다.")
- 				$('#rightMsg').show();
  			}
  			else{			 				
  				$.ajax({
@@ -158,15 +171,13 @@
  						data = JSON.parse(data)
  						if(data.result == "false"){
  							$('#rightMsg').html("계좌를 찾을수 없습니다.")
- 							$('#rightMsg').show()
  						}else{
  							
  							toggle2 = 2
- 							$('#rightMsg').hide()
+ 							$('#rightMsg').html("")
  							receiver = true 							
  							$("#toAccNum").prop("readonly", true);
  							$('#toBank').prop('disabled', true);
- 			 				$('#rightMsg').hide();
  			 				$("#toConfirm").text("변경");
  			 				$("#toConfirm").css("border-color" , "red")
  			 				$("#toConfirm").css("color" , "red")
@@ -193,15 +204,12 @@
 			$("#toConfirm").text("확인");
 			$("#toConfirm").css("border-color" , "#3498db")
 			$("#toConfirm").css("color" , "#3498db")
-
  		}				
  	})
-
-
  	
  	$("#send").click(function(){
- 		if(jobfinshed != true){
 
+ 		if(jobfinshed != true){
  			let fromAccNum = '${fromAcc.accNum }' 		
  		 		let toAccNum = $("#toAccNum").val()		
  		 		let toBankName = $("#toBank").val()
@@ -222,6 +230,7 @@
  		 			result = true
  		 		}
  		 		if(result){
+ 		 			 $('#loading-motion').show() 		 			 
  		 			$.ajax({
  		 				type: 'post',
  		 				url : "/Bank-Web/bank/transactionProcess",
@@ -247,6 +256,11 @@
  		 				 		$('#middleMsg').css("color" , "green");	
  		 				 		updateBal()
  		 				 		$('#send').hide()
+ 		 	 		 			$('#goback').show()
+ 		 	 		 			$('#currentBal').css("color" , "red");
+ 		 				 		$('#toConfirm').hide()
+								$('#loading-motion').hide()
+								
  		 				 	} 		 					
  		 				},
  		 				error : function(){
@@ -258,7 +272,6 @@
  	
  	})	 
  })
-
  
  	function getUserInfo(userId, bankName){
  		$.ajax({
@@ -386,29 +399,32 @@
                			<i id="pwdIcon" class="ri-secure-payment-fill"></i>
                			<i id="moneyIcon" class="ri-bank-card-fill" hidden="true"></i>
                		</label>               		 
-               			<input style="width:50%;  display:inline;" id="accPwdVal" class="form-control" type="text" placeholder="계좌비밀번호"> 
+               			<input style="width:50%;  display:inline;" id="accPwdVal" class="form-control" type="password" placeholder="계좌비밀번호"> 
                			<input style="width:50%;  display:inline;" id="sendAmount" class="form-control" type="text" placeholder="거래량 ₩" hidden="true">
                			<button id="confirmAmount" style="display:inline; width:20%; background-color:white; border-color:#3498db; border-style: dashed; color:#3498db"  hidden="true">확인</button>  		
                	</li>               	               
               </ul>
               <div class="btn-wrap" id="leftButtons" style="padding-top:0px;">
-              	<a class="btn-buy" id="backToView"  style="background-color:red; border-color:red;">다른 계좌</a>
+              	<a  href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn-buy" id="backToView"  style="background-color:red; border-color:red;">다른 계좌</a>
                 <a class="btn-buy" id="pwdValid" >인증</a>             
               </div>
 				<div id="leftMsg" style="color:red; font-size:17px;"> </div>
             </div>
           </div>
-          
-          <div class="col-lg-4 col-md-6 mt-4 mt-lg-0">
-          <div class="box" data-aos="zoom-in" data-aos-delay="100" style="margin-top:35%;">         
-          	<div class="btn-wrap">
-          	 <a href="#" class="btn-buy" id="send"> 보내기</a>          	 
-          	</div>
-        <div id="middleMsg" style="color:red; font-size:17px;"></div>
-          	</div>
-          </div>
+					<div class="col-lg-4 col-md-6 mt-4 mt-lg-0">
+						<div class="box" data-aos="zoom-in" data-aos-delay="100"
+							style="margin-top: 35%;">
+							<div class="btn-wrap">
+								<div id="middleMsg" style="color: red; font-size: 17px;"></div>
+								<a href="#" class="btn-buy" id="send"> 보내기</a>
+								<a  href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn-buy" id="goback" style="background-color:red; color:white; "> 돌아가기</a>								
+							</div>
+						</div>
+						 <div id="loading-motion" style="margin:0px auto;" class="loader"></div>
+					</div>
+								         
 
-          <div class="col-lg-4 col-md-6 mt-4 mt-lg-0">
+					<div class="col-lg-4 col-md-6 mt-4 mt-lg-0">
             <div class="box" data-aos="zoom-in-left" data-aos-delay="200">
               <h3>받는 사람</h3>
            <%--   <h4><sup>잔액</sup>${fromAcc.accBalance} ₩<span></span></h4> --%>             
@@ -421,18 +437,20 @@
 					<option value="800">MG구마을금고</option>
 					<option value="900">TVA</option>
 				</select></li>
-	            	<li id="rightName"></li>	              
+	            	              
                    	<li>
                		<label>
                			<i id="pwdIcon" class="ri-secure-payment-fill"></i>
                		</label> 
                			<input id="toAccNum" style="width:50%;  display:inline;" id="accPwdVal" class="form-control" type="text" placeholder="보내는 계좌 번호">               			 
                		</li>
-                
+               		<li>&nbsp;</li>
+               		<li>&nbsp;</li>
+    				<li>&nbsp;</li>
+                <li id="rightName"></li>	
               </ul>             
               <div class="btn-wrap">
                 <a id="toConfirm" class="btn-buy">확인</a>
-                <a id="toCancel" class="btn-buy" hidden="true">취소</a>
               </div>
               <div id="rightMsg" style="color:red; font-size:17px;">
             </div>

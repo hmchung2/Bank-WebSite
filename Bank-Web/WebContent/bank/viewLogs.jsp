@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>       
+    
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -8,7 +9,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>WAndC 계좌 조회</title>
+  <title>WAndC 은행 로그인</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -42,17 +43,10 @@
  <script>
  // 스크립트 작성은 여기서
  
- $(document).ready(function() {
-	 console.log('${list}')
+ $(document).ready(function(){
 	 
-	 $('.viewLog').click(function(){
-		days = $(this).parents(".btn-wrap").children(".log_dur").val()
-		accNum = $(this).parents(".btn-wrap").children(".hiddenAccnum").val()  
-		location.href= "/Bank-Web/bank/viewLog.do?accNum="+ accNum +"&days="+days						
-	 })
 	 
  })
-
 
  
  </script>
@@ -65,25 +59,10 @@
 	<header id="header" class="fixed-top d-flex align-items-center">
 		<jsp:include page="/include/header.jsp" />
 	</header>
+
+
 	<main id="main">
 
-<%-- 			<c:forEach items="${ list }" var="board" varStatus="loop">
-				<tr 
-					<c:if test="${ loop.index mod 2 ne 0 }"> class="odd" 
-					</c:if>>
-					<td>${ board.no }</td>
-					<td>
-						 <a href="<%=request.getContextPath() %>/board/detail.do?no=${ board.no }">
-						<a href="#" onclick="doAction()">
-						<a href="javascript:doAction(${ board.no })">
-							<c:out value="${ board.title }" />
-						</a>
-					</td>
-					<td>${ board.writer }</td>
-					<td>${ board.regDate }</td>
-				</tr>
-			</c:forEach>
- --%>
 		<!-- ======= Breadcrumbs Section ======= -->
 		<section class="breadcrumbs">
 			<div class="container">
@@ -92,81 +71,49 @@
 					<h2>Wells & Clarify</h2>
 					<ol>
 						<li><a href="<%=request.getContextPath() %>">홈</a></li>
-						<li>계좌조회</li>
+						<li>이체기록</li>
 					</ol>
 				</div>
 			</div>
 		</section>
-		
-		
-		    <!-- ======= Pricing Section ======= -->
-    <section id="pricing" class="pricing">
+		  <!-- ======= F.A.Q Section ======= -->
+    <section id="faq" class="faq">
       <div class="container">
 
-        <div class="section-title">
-          <h2>${userVO.name }님의 계좌 조회</h2>
-          <p>이체 기능 및 이체 역사 조회</p>
+        <div class="section-title" data-aos="fade-up">
+          <h2>이체 기록</h2>
         </div>
 
-        <div class="row">
-<!-- ======= One Section ======= -->
-		<c:forEach items="${ list }" var="account" varStatus="loop">
-          <div class="col-lg-4 col-md-6 mt-4 mt-md-0">
-            <div class="box recommended" data-aos="zoom-in" data-aos-delay="100">
-              <h3>별칭 : ${account.nick }</h3>
-              <h4><sup>잔액</sup>${account.accBalance} ₩<span></span></h4>
-              <ul>
-              	<li> 계좌 번호 : ${account.accNum } </li>
-                <li> 계좌 개설일 : ${account.regDate } </li>
-                <li> 오픈뱅킹 사용 여부 : ${account.openOpt } </li>
-                <li> 이체 한도량 사용 여부 : ${account.maxOpt } </li>
-              </ul>
-              <div class="btn-wrap">
-              	<input type="hidden" class="hiddenAccnum" value= "${account.accNum }"> 
-                <a href="#"  class="btn-buy viewLog">이체 조회</a>               
-                <a href="<%=request.getContextPath() %>/bank/transaction.do?accNum=${ account.accNum }&fromBankName=700" style="background-color:red; border-color:red; " class="btn-buy">이체 하기</a>
- 			<select class="log_dur" style="float:left; margin-left:10%; border-color:#3498db; background-color:white; color:#5faee3;" >
-                <option value="1">1일</option>
-                <option value="180">180일</option>
-                <option value="365">365일</option>
-                <option value="all"> 전체</option>
-                </select>
-              </div>
-            </div>
-          </div>
-     </c:forEach>
-<!-- ======= One Section ======= -->
 
-
-          <div class="col-lg-4 col-md-6 mt-4 mt-lg-0" hidden="true">
-            <div class="box" data-aos="zoom-in-left" data-aos-delay="200">
-              <h3>Developer</h3>
-              <h4><sup>$</sup>29<span> / month</span></h4>
-              <ul>
-                <li>Aida dere</li>
-                <li>Nec feugiat nisl</li>
-                <li>Nulla at volutpat dola</li>
-                <li>Pharetra massa</li>
-                <li>Massa ultricies mi</li>
-              </ul>
-              <div class="btn-wrap">
-                <a href="#" class="btn-buy">Buy Now</a>
-              </div>
-            </div>
+<c:forEach items="${ list }" var="log" varStatus="loop">
+        <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5">
+            <i class="ri-bank-card-fill"></i>
+            
+            <c:if test="${log.action eq 'W' }">
+            	<h4>입금</h4>
+            </c:if>
+             <c:if test="${log.action eq 'D' }">
+            	<li><h4>출금</h4></li>
+            </c:if>
+            	이체일 : ${log.logDate }
           </div>
-        </div>
+          <div class="col-lg-7">            
+            <ul>
+            	<li>거래 은행 : ${log.otherAccNum }</li>
+            	<li>거래 계좌번호 : ${log.otherBankNum} </li>
+            	<li>거래량 : ${log.amount}</li>
+            	<li>거래전 후 잔금 : ${log.postBalance }</li>            	
+            </ul>                        
+          </div>
+        </div><!-- End F.A.Q Item-->
+</c:forEach>
       </div>
-    </section><!-- End Pricing Section -->
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+    </section><!-- End F.A.Q Section -->
+
+
+
+
 	</main>
   <footer id="footer">
   	<jsp:include page="/include/footer.jsp" />
@@ -186,4 +133,4 @@
   <script src="<%=request.getContextPath()%>/assets/js/main.js"></script>
   	<script src="<%=request.getContextPath()%>/assets/js/myFunc.js"></script>
 
-</body>l>
+</body>
