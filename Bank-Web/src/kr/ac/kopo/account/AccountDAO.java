@@ -15,9 +15,6 @@ import kr.ac.kopo.util.JDBCClose;
 
 public class AccountDAO {
 
-	
-
-	
 	public MemberVO getUserByID(String id , String BankName) {
 		MemberVO  memberVO = null;
 		if(BankName.equals("700")) {
@@ -538,19 +535,11 @@ public class AccountDAO {
 		return result;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
 	public boolean insertWCDepositLog(Connection conn, String otherBankName ,  String accNum , String otherAccNum, int amount , int preBal ) throws SQLException {
 		boolean result = false;
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO WC_LOG@WCLINK (ACC_NUM ,  ACTION , AMOUNT , OTHER_ACC_NUM , OTHER_BANK_NAME , PRE_BALANCE  , POST_BALANCE  )");
-		sql.append(" RECEIVING_BANK_NAME, RECEIVING_ACC_NO)");
-		sql.append(" VALUES(?, ?, ?, ?, ?, ?, ?)");	
+		sql.append("INSERT INTO WC_LOG@WCLINK (ACC_NUM ,  ACTION , AMOUNT , OTHER_ACC_NUM , OTHER_BANK_NAME , PRE_BALANCE  , POST_BALANCE ) ");
+		sql.append(" VALUES(?, ?, ?, ?, ?, ?, ? )");	
 		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		int loc = 1;
 		pstmt.setString(loc++, accNum);		
