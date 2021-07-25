@@ -520,13 +520,13 @@ public class AccountDAO {
 		sql.append(" VALUES(?, ?, ?, ?, ?, ?, ?)");		
 		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		int loc = 1;
-		pstmt.setString(loc++,  accNum1 );	
-		pstmt.setString(loc++, otherAccNum);
+		pstmt.setString(loc++,  "600" );	
+		pstmt.setString(loc++,  accNum1 );
 		pstmt.setInt(loc ++ , preBal);
 		pstmt.setInt(loc++, amount);
 		pstmt.setInt(loc++, preBal - amount);
-		pstmt.setString(loc++,  "600" );
-		pstmt.setString(loc++, otherBankName);
+		pstmt.setString(loc++,  otherBankName );
+		pstmt.setString(loc++, otherAccNum  );
 		int rowCnt = pstmt.executeUpdate();
 		if(rowCnt == 1) {
 			result= true;
