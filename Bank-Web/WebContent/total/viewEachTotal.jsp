@@ -127,7 +127,7 @@
         <div class="section-title">
           <h2>${userVO.name }님의 ${totalNick }계정</h2>
 
-          <p>이체 기능 및 이체 역사 조회</p>      
+          <p>이체하기 눌러서 이체하로 가기</p>      
         </div>							
 				<div class="row">
 					<!-- ======= One Section ======= -->
@@ -201,7 +201,7 @@
 									<li>계좌 개설일 : ${account.regDate }</li>
 								</ul>
 								<div class="btn-wrap">
-									<a href="#" class="btn-buy">이체 조회</a> <a
+									<a
 										href="<%=request.getContextPath() %>/bank/TotalTransaction.do?accNum=${ account.accNum }&fromBankName=${account.bankName }"
 										style="background-color: red; border-color: red;"
 										class="btn-buy">이체 하기</a>
@@ -212,16 +212,7 @@
 				</div>
 			</div>
     </section><!-- End Pricing Section -->
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	</main>
   <footer id="footer">
   	<jsp:include page="/include/footer.jsp" />

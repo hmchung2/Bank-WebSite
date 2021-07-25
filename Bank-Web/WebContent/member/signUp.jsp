@@ -36,10 +36,6 @@
   <link href="<%=request.getContextPath()%>/assets/css/signUp.css" rel="stylesheet">
   
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-  
-  
-  
-
 <script src="<%=request.getContextPath()%>/assets/js/jquery-3.6.0.min.js"></script>
 <script src="<%=request.getContextPath()%>/assets/js/myFunc.js"></script>
 

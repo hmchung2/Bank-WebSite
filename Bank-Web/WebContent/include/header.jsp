@@ -38,29 +38,12 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 2</a></li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-            </ul>
-          </li>
-          
-          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-          <li><a class="nav-link scrollto" href="#about">About</a></li>
-          <li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌</a></li>
-          <li><a class="nav-link scrollto " href="<%=request.getContextPath() %>/bank/viewAccount.do">계좌 조회</a></li>
-          <li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/bank/createAccount.do">WC 계좌 개설</a></li>        
+
+          <li><a class="nav-link active" href="<%=request.getContextPath() %>/index.jsp">Home</a></li>
+          <li><a class="nav-link" >게시판</a></li>
+          <li><a class="nav-link" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌</a></li>
+          <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/viewAccount.do">계좌 조회</a></li>
+          <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/createAccount.do">WC 계좌 개설</a></li>        
           <c:if test="${ empty userVO }">
           	<li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signcontract.do">회원가입</a></li>
           	<li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signin.do">로그인</a></li>
