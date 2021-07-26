@@ -757,7 +757,6 @@ select.form-control:not([size]):not([multiple]) {
 			datatype: 'json',
 			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 			success : function(result){
-				alert(result)
 			
 				var products = $.parseJSON(result);								
 				
