@@ -722,10 +722,10 @@ select.form-control:not([size]):not([multiple]) {
 	})
 	
  })
-
  	function writeReply(index){
 		
-		if('${userVO}' == null  || '${userVO} == ""  ' ){
+		if('${userVO}' == null  || '${userVO}' == "" ){
+		
 			$("#sendingMyMsg").html('로그인 사용자만 이용이 가능합니다.')
 			$("#myModal").trigger("click");
 				
@@ -797,7 +797,13 @@ select.form-control:not([size]):not([multiple]) {
 		}) 			 		 		
  	}
 
- 	
+ /* 	</div>
+	<div class="reply timeline-content"
+		style="margin-top: 2%;">
+		<ul id="showReply_${board.no }">
+			
+		</ul>
+	</div> */
  </script>
 
 
@@ -891,14 +897,12 @@ select.form-control:not([size]):not([multiple]) {
 																href="javascript:;" class="m-r-15 text-inverse-lighter"><i
 																class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
 														</div>
-
 														<div class="reply timeline-content"
 															style="margin-top: 2%;">
 															<ul id="showReply_${board.no }">
-															
+																
 															</ul>
 														</div>
-
 														<div class="timeline-comment-box">
 													
 														
