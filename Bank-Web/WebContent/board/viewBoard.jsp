@@ -705,7 +705,14 @@ select.form-control:not([size]):not([multiple]) {
 <script>
  // 스크립트 작성은 여기서
  $(document).ready(function(){
-
+	 
+	 $("#myModal").click(function(){
+		  $(".modal").fadeIn();
+	  });		  
+	  $(".exiting").click(function(){
+		  $(".modal").fadeOut();
+	  })	
+	 
 	 $('.updateReply').trigger("click")
 
 	$('#writeNew').click(function(){
@@ -716,34 +723,42 @@ select.form-control:not([size]):not([multiple]) {
 	
  })
 
- 	function writeReply(index){	
-		id =   "#index_" +  index
-		inputData = id + " input"
-		message = $(inputData).val()
-		if(message.length == "" ){
-			$('#msg_'  +  index).text("최소 한글자 이상 입력 바랍니다.")
+ 	function writeReply(index){
+		
+		if('${userVO}' == null  || '${userVO} == ""  ' ){
+			$("#sendingMyMsg").html('로그인 사용자만 이용이 가능합니다.')
+			$("#myModal").trigger("click");
+				
 		}else{
-			$('#msg_'  +  index).text("")
+			id =   "#index_" +  index
+			inputData = id + " input"
+			message = $(inputData).val()
+			if(message.length == "" ){
+				$('#msg_'  +  index).text("최소 한글자 이상 입력 바랍니다.")
+			}else{
+				$('#msg_'  +  index).text("")
 
-			$.ajax({
-					type: 'post',
-					url : "/Bank-Web/Board/Reply",
-					data :{
-						index  : index,
-						message :  message,
-					},
-					contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
-					datatype: 'json',
-					success : function(data){
-						console.log("success")					
-					},
-					error : function(){			
-						console.log("실패")				
-					} 						
-				}) 				 					  
-	 		}
-			
+				$.ajax({
+						type: 'post',
+						url : "/Bank-Web/Board/Reply",
+						data :{
+							index  : index,
+							message :  message,
+						},
+						contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+						datatype: 'json',
+						success : function(data){
+							console.log("success")					
+						},
+						error : function(){			
+							console.log("실패")				
+						} 						
+					}) 				 					  
+		 		}
+				
+			}	
 		}
+	 	
 		
  
  	function showReply(index){	   
@@ -897,9 +912,7 @@ select.form-control:not([size]):not([multiple]) {
 																		<input type="text" class="form-control rounded-corner replyMsg"
 																			placeholder="Write a comment...">
 																		<span class="input-group-btn p-l-10">
-																		<c:if test="${ not empty userVO }">
 																		<button onclick="writeReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner" type="button">댓글</button>
-																																</c:if>
 																		
 																		<button onclick="showReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner updateReply" type="button">조회</button>
 																		
@@ -939,6 +952,30 @@ select.form-control:not([size]):not([multiple]) {
 		</section>
 
 	
+		<button id="myModal" hidden="true">모달창</button>
+		<div class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Wells & Clarify</h5>
+						<button type="button" class="close exiting" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+
+					<div class="modal-body">
+						<img src="<%=request.getContextPath()%>/assets/img/illustration-6.svg"
+							style="width: 250px; height: 200px;">
+						<p id="sendingMyMsg" style="font-size: 30px"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary exiting">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 
