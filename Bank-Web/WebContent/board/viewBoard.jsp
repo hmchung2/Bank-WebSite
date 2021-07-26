@@ -901,7 +901,7 @@ select.form-control:not([size]):not([multiple]) {
 																		<button onclick="writeReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner" type="button">댓글</button>
 																																</c:if>
 																		
-																		<button onclick="showReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner updateReply" type="button">업데이트</button>
+																		<button onclick="showReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner updateReply" type="button">조회</button>
 																		
 																		</span>
 																	</div>
