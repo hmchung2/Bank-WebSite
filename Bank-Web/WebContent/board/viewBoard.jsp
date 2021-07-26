@@ -886,7 +886,7 @@ select.form-control:not([size]):not([multiple]) {
 
 														<div class="timeline-comment-box">
 													
-														<c:if test="${ not empty userVO }">
+														
 														<div class="user">
 																<img
 																	src="https://bootdey.com/img/Content/avatar/avatar3.png">
@@ -897,7 +897,10 @@ select.form-control:not([size]):not([multiple]) {
 																		<input type="text" class="form-control rounded-corner replyMsg"
 																			placeholder="Write a comment...">
 																		<span class="input-group-btn p-l-10">
+																		<c:if test="${ not empty userVO }">
 																		<button onclick="writeReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner" type="button">댓글</button>
+																																</c:if>
+																		
 																		<button onclick="showReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner updateReply" type="button">업데이트</button>
 																		
 																		</span>
@@ -906,7 +909,6 @@ select.form-control:not([size]):not([multiple]) {
 															</div>
 													<h6 style="color:red; margin-top:2%" id="msg_${board.no }"  ></h6>
 															
-														</c:if>
 														</div>
 													</div> <!-- end timeline-body -->
 												</li>
