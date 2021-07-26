@@ -69,7 +69,7 @@
 	 
 	 $('#loading-motion').hide()
 	 $('#goback').hide()
-	 
+	 $('#sendEmail').hide()
 	 
 	 console.log('${fromAcc}')
  	 $("#pwdValid").click(function(){ 		
@@ -127,10 +127,11 @@
 		 			$('#leftMsg').show(); 			
 		 		}else if( '${fromAcc.maxOpt}' == 'T' &&  parseInt($('#sendAmount').val()) > parseInt('${fromAcc.maxVal}') ){
 		 			$('#leftMsg').html("한도량을 초과 하셨습니다.")
-		 			$('#leftMsg').show(); 
-		 			
-		 		}
-			 
+		 			$('#leftMsg').show(); 		 			
+		 		}else if( parseInt($('#sendAmount').val()) >   parseInt('${fromAcc.accBalance}')  ){
+		 			$('#leftMsg').html("한도량을 초과 하셨습니다.")
+		 			$('#leftMsg').show(); 		 			
+		 		}			 
 			 else{
 		 			$('#leftMsg').hide();
 		 			$(this).html("변경")
@@ -206,6 +207,26 @@
 			$("#toConfirm").css("color" , "#3498db")
  		}				
  	})
+/*  	$('#sendEmail').click(function() {
+ 		$.ajax({
+				type: 'post',
+				url : "/Bank-Web//SendEmailServlet",
+				data : {
+					processed : "true"
+				},
+				contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+				datatype: 'json',
+				success : function(data){
+					$("#middleMsg").append("<div>이메일 보내기 완료</div>") 		 					
+				},
+				error : function(){
+					$("#middleMsg").append("<div>문제가 발생 했습니다.</div>") 	 					
+				} 				
+			}) 	
+ 		
+ 	}) */
+ 		
+ 	
  	
  	$("#send").click(function(){
 
@@ -260,6 +281,7 @@
  		 	 		 			$('#currentBal').css("color" , "red");
  		 				 		$('#toConfirm').hide()
 								$('#loading-motion').hide()
+								//$('#sendEmail').show()
 								
  		 				 	} 		 					
  		 				},
@@ -417,7 +439,8 @@
 							<div class="btn-wrap">
 								<div id="middleMsg" style="color: red; font-size: 17px;"></div>
 								<a href="#" class="btn-buy" id="send"> 보내기</a>
-								<a  href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn-buy" id="goback" style="background-color:red; color:white; "> 돌아가기</a>								
+								<a  href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn-buy" id="goback" style="background-color:red; color:white; "> 돌아가기</a>
+								<button id="sendEmail">이메일 보내기</button>								
 							</div>
 						</div>
 						 <div id="loading-motion" style="margin:0px auto;" class="loader"></div>

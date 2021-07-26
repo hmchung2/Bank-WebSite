@@ -110,6 +110,13 @@
 
 
 	$(document).ready(function() {
+		 $("#myModal").click(function(){
+			  $(".modal").fadeIn();
+		  });		  
+		  $(".exiting").click(function(){
+			  $(".modal").fadeOut();
+		  })			
+		
 		if ($('#max_condition').checked) {
 				$('#condition_range').removeAttr('disabled');
 		} else if (!$('#max_condition') .checked) {
@@ -133,7 +140,8 @@
 			if (result) {
 				$('#hidden01').trigger("click")
 			} else {
-				alert(msg)
+				$("#sendingMyMsg").html(msg)
+				$("#myModal").trigger("click");	
 			}
 		})
 
@@ -161,7 +169,8 @@
 			if (result) {
 				$('#hidden02').trigger("click")
 			} else {
-				alert(msg)
+				$("#sendingMyMsg").html(msg)
+				$("#myModal").trigger("click");	
 			}
 		})
 				
@@ -176,7 +185,8 @@
 				}
 			})			
 			if(!result){
-				alert(msg)
+				$("#sendingMyMsg").html(msg)
+				$("#myModal").trigger("click");	
 				return false;
 			}
 		
@@ -211,11 +221,13 @@
 					datatype: 'json',
 					success : callback, 
 					error: function(){
-						alert("실패")
+						$("#sendingMyMsg").html("실패")
+						$("#myModal").trigger("click");
 					}
 				})			
 			}else{
-				alert(msg)
+				("#sendingMyMsg").html(msg)
+				$("#myModal").trigger("click");
 			}		
 		}) 		
 	})
@@ -447,6 +459,32 @@
 		</section>
 
 	</main>
+	
+		<button id="myModal" hidden="true">모달창</button>
+		<div class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Wells & Clarify</h5>
+						<button type="button" class="close exiting" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+
+					<div class="modal-body">
+						<img src="<%=request.getContextPath()%>/assets/img/illustration-6.svg"
+							style="width: 250px; height: 200px;">
+						<p id="sendingMyMsg" style="font-size: 30px"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary exiting">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	
 	<footer id="footer">
   	<jsp:include page="/include/footer.jsp" />
   </footer>

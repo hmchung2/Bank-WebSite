@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -678,12 +680,15 @@ select.form-control:not([size]):not([multiple]) {
 .text-danger, .text-red {
     color: #ff5b57!important;
 }
+
+#writeNew {
+       top : 20%;
+       left : 10%;
+       position: fixed;
+       z-index: 3000;
+}
   
   </style>
-  
-  
-  
-  
   
   <script src="<%=request.getContextPath()%>/assets/js/jquery-3.6.0.min.js"></script>
   <script src="<%=request.getContextPath()%>/assets/js/myFunc.js"></script>
@@ -691,18 +696,97 @@ select.form-control:not([size]):not([multiple]) {
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> 
  <script src="<%=request.getContextPath()%>/member/kakaoLogin.js"></script>
  
- <script>
+<%--  		<input type="text" class="form-control rounded-corner replyMsg"
+		placeholder="Write a comment...">
+	<span class="input-group-btn p-l-10">
+	<button onclick="writeReply(${board.no])" class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
+	</span --%>
+
+<script>
  // 스크립트 작성은 여기서
- 
  $(document).ready(function(){
-	 
-	 
+
+	 $('.updateReply').trigger("click")
+
+	$('#writeNew').click(function(){
+		
+		location.href = "<%=request.getContextPath()%>/board/writeNewBoard.do"
+		
+	})
+	
  })
 
+ 	function writeReply(index){	
+		id =   "#index_" +  index
+		inputData = id + " input"
+		message = $(inputData).val()
+		if(message.length == "" ){
+			$('#msg_'  +  index).text("최소 한글자 이상 입력 바랍니다.")
+		}else{
+			$('#msg_'  +  index).text("")
+
+			$.ajax({
+					type: 'post',
+					url : "/Bank-Web/Board/Reply",
+					data :{
+						index  : index,
+						message :  message,
+					},
+					contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+					datatype: 'json',
+					success : function(data){
+						console.log("success")					
+					},
+					error : function(){			
+						console.log("실패")				
+					} 						
+				}) 				 					  
+	 		}
+			
+		}
+		
  
+ 	function showReply(index){	   
+ 		id =   "#index_" +  index
+ 		$.ajax({
+			type: 'POST',
+			url : "/Bank-Web/ShowReply",
+			data : {
+				index:index
+			},
+			datatype: 'json',
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			success : function(result){
+				alert(result)
+			
+				var products = $.parseJSON(result);								
+				
+				var s = '';
+				replySection = '#showReply_' + index
+				
+				$(replySection).empty()
+				
+				for(var i = 0; i < products.length; i++) {					
+					var datetag =$('<div> 날짜 :' +  products[i].regDate  +  '</div>')
+					datetag.css("color" , "#3498db")
+					var idtag = $('<div> 작성자 : ' + products[i].writer + '<div>' )
+					idtag.css("color"  , "#3498db")
+					var message = $('<p>' + products[i].message + '</p>')
+					$(replySection).append(datetag)
+					$(replySection).append(idtag)
+					$(replySection).append(message)
+					$(replySection).append("<hr></hr>")
+				}		
+				},error : function(){
+				 console.log("아이드 찾기 실패")					
+				} 				
+		}) 			 		 		
+ 	}
+
+ 	
  </script>
- 
- 
+
+
 </head>
 
 <body>
@@ -712,219 +796,148 @@ select.form-control:not([size]):not([multiple]) {
 	</header>
 
 
-	<main id="main">
 
+	<main id="main">
 		<!-- ======= Breadcrumbs Section ======= -->
 		<section class="breadcrumbs">
 			<div class="container">
 				<div class="d-flex justify-content-between align-items-center">
 					<h2>Wells & Clarify</h2>
 					<ol>
-						<li><a href="<%=request.getContextPath() %>">홈</a></li>
+						<li><a href="<%=request.getContextPath()%>">홈</a></li>
 						<li>게시판</li>
 					</ol>
 				</div>
 			</div>
 		</section>
+		
+	
 		<section class="inner-page">
-<div class="container">
-   <div class="row">
-      <div class="col-md-12">
-         <div id="content" class="content content-full-width">
-            <!-- begin profile -->
-            <div class="profile">          
-            </div>
-            <!-- end profile -->
-            <!-- begin profile-content -->
-            <div class="profile-content">
-               <!-- begin tab-content -->
-               <div class="tab-content p-0">
-                  <!-- begin #profile-post tab -->
-                  <div class="tab-pane fade active show" id="profile-post">
-                     <!-- begin timeline -->
-                     <ul class="timeline">
-                        <li>
-                           <!-- begin timeline-time -->
-                           <div class="timeline-time">
-                              <span class="date">today</span>
-                              <span class="time">04:20</span>
-                           </div>
-                           <!-- end timeline-time -->
-                           <!-- begin timeline-icon -->
-                           <div class="timeline-icon">
-                              <a href="javascript:;">&nbsp;</a>
-                           </div>
-                           <!-- end timeline-icon -->
-                           <!-- begin timeline-body -->
-                           <div class="timeline-body">
-                              <div class="timeline-header">
-                                 <span class="userimage"><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""></span>
-                                 <span class="username"><a href="javascript:;">Sean Ngu</a> <small></small></span>
-                                 <span class="pull-right text-muted">18 Views</span>
-                              </div>
-                              <div class="timeline-content">
-                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc faucibus turpis quis tincidunt luctus.
-                                    Nam sagittis dui in nunc consequat, in imperdiet nunc sagittis.
-                                 </p>
-                              </div>
-                              <div class="timeline-likes">
-                                 <div class="stats-right">
-                                    <span class="stats-text">259 Shares</span>
-                                    <span class="stats-text">21 Comments</span>
-                                 </div>
-                                 <div class="stats">
-                                    <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                                    <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
-                                    </span>
-                                    <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                                    <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                    <span class="stats-total">4.3k</span>
-                                 </div>
-                              </div>
-                              <div class="timeline-footer">
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a> 
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                              </div>
-                
-                              <div class="reply timeline-content" style="margin-top:2%;">
-                              		<div style="color:blue;">정해명 오늘</div>
-                             		<div>글</div>                        	
-                              </div>
-                              
-                           <div class="reply timeline-content" style="margin-top:2%;">
-                              		<div style="color:blue;">정해명 오늘</div>
-                             		<div>글</div>                        	
-                              </div>
-                              
-                              <div class="timeline-comment-box">
-                       
-                             	 
-                                 <div class="user"><img src="https://bootdey.com/img/Content/avatar/avatar3.png"></div>
-                                 <div class="input">
-                                    <form action="">
-                                       <div class="input-group">
-                                          <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                          <span class="input-group-btn p-l-10">
-                                          <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                                          </span>
-                                       </div>
-                                    </form>
-                                 </div>
-                              </div>
-                           </div>
-                           <!-- end timeline-body -->
-                        </li>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                         <li>
-                           <!-- begin timeline-time -->
-                           <div class="timeline-time">
-                              <span class="date">today</span>
-                              <span class="time">04:20</span>
-                           </div>
-                           <!-- end timeline-time -->
-                           <!-- begin timeline-icon -->
-                           <div class="timeline-icon">
-                              <a href="javascript:;">&nbsp;</a>
-                           </div>
-                           <!-- end timeline-icon -->
-                           <!-- begin timeline-body -->
-                           <div class="timeline-body">
-                              <div class="timeline-header">
-                                 <span class="userimage"><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""></span>
-                                 <span class="username"><a href="javascript:;">Sean Ngu</a> <small></small></span>
-                                 <span class="pull-right text-muted">18 Views</span>
-                              </div>
-                              <div class="timeline-content">
-                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc faucibus turpis quis tincidunt luctus.
-                                    Nam sagittis dui in nunc consequat, in imperdiet nunc sagittis.
-                                 </p>
-                              </div>
-                              <div class="timeline-likes">
-                                 <div class="stats-right">
-                                    <span class="stats-text">259 Shares</span>
-                                    <span class="stats-text">21 Comments</span>
-                                 </div>
-                                 <div class="stats">
-                                    <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                                    <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
-                                    </span>
-                                    <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                                    <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                    <span class="stats-total">4.3k</span>
-                                 </div>
-                              </div>
-                              <div class="timeline-footer">
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a> 
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                              </div>
-                
-                              <div class="reply timeline-content" style="margin-top:2%;">
-                              		<div style="color:blue;">정해명 오늘</div>
-                             		<div>글</div>                        	
-                              </div>
-                              
-                           <div class="reply timeline-content" style="margin-top:2%;">
-                              		<div style="color:blue;">정해명 오늘</div>
-                             		<div>글</div>                        	
-                              </div>
-                              
-                              <div class="timeline-comment-box">
-                       
-                             	 
-                                 <div class="user"><img src="https://bootdey.com/img/Content/avatar/avatar3.png"></div>
-                                 <div class="input">
-                                    <form action="">
-                                       <div class="input-group">
-                                          <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                          <span class="input-group-btn p-l-10">
-                                          <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                                          </span>
-                                       </div>
-                                    </form>
-                                 </div>
-                              </div>
-                           </div>
-                           <!-- end timeline-body -->
-                        </li>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                     </ul>
-                     <!-- end timeline -->
-                  </div>
-                  <!-- end #profile-post tab -->
-               </div>
-               <!-- end tab-content -->
-            </div>
-            <!-- end profile-content -->
-         </div>
-      </div>
-   </div>
-</div>
+			<c:if test="${ not empty userVO }">
+
+				<div id="writeNew">
+					<button type="button" class="btn btn-primary btn-lg">글 쓰기</button>
+				</div>
+			</c:if>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="content" class="content content-full-width">
+							<!-- begin profile -->
+							<div class="profile"></div>
+							<!-- end profile -->
+							<!-- begin profile-content -->
+							<div class="profile-content">
+								<!-- begin tab-content -->
+								<div class="tab-content p-0">
+									<!-- begin #profile-post tab -->
+									<div class="tab-pane fade active show" id="profile-post">
+										<!-- begin timeline -->
+										<ul class="timeline">
+											<c:forEach items="${ list }" var="board" varStatus="loop">
+												<li id="index_${board.no }">
+													<!-- begin timeline-time -->
+													<div class="timeline-time">
+														<span class="date">날짜</span> <span class="time">${board.regDate }</span>
+													</div> <!-- end timeline-time --> <!-- begin timeline-icon -->
+													<div class="timeline-icon">
+														<a href="javascript:;">&nbsp;</a>
+													</div> <!-- end timeline-icon --> <!-- begin timeline-body -->
+													<div class="timeline-body">
+														<div class="timeline-header">
+															<span class="userimage"><img
+																src="https://bootdey.com/img/Content/avatar/avatar3.png"
+																alt=""></span> <span class="username"><a
+																href="javascript:;">${board.writer } </a> <small></small></span> <span
+																class="pull-right text-muted">${board.title }</span>
+														</div>
+														<div class="timeline-content">
+															<h2>${board.title }</h2>
+															<p>${board.message}</p>
+														</div>
+														<div class="timeline-likes">
+															<div class="stats-right">
+																 <span
+																	class="stats-text">${board.viewCnt } like</span>
+															</div>
+															<div class="stats">
+																<span class="fa-stack fa-fw stats-icon"> <i
+																	class="fa fa-circle fa-stack-2x text-danger"></i> <i
+																	class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
+																</span> <span class="fa-stack fa-fw stats-icon"> <i
+																	class="fa fa-circle fa-stack-2x text-primary"></i> <i
+																	class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+																</span> <span class="stats-total">${board.viewCnt }</span>
+															</div>
+														</div>
+														<div class="timeline-footer">
+															<a href="javascript:;"
+																class="m-r-15 text-inverse-lighter"><i
+																class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a> <a
+																href="javascript:;" class="m-r-15 text-inverse-lighter"><i
+																class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
+														</div>
+
+														<div class="reply timeline-content"
+															style="margin-top: 2%;">
+															<ul id="showReply_${board.no }">
+															
+															</ul>
+														</div>
+
+														<div class="timeline-comment-box">
+													
+														<c:if test="${ not empty userVO }">
+														<div class="user">
+																<img
+																	src="https://bootdey.com/img/Content/avatar/avatar3.png">
+															</div>
+															<div class="input">
+																<form action="">
+																	<div class="input-group">
+																		<input type="text" class="form-control rounded-corner replyMsg"
+																			placeholder="Write a comment...">
+																		<span class="input-group-btn p-l-10">
+																		<button onclick="writeReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner" type="button">댓글</button>
+																		<button onclick="showReply(${board.no})"  class="btn btn-primary f-s-12 rounded-corner updateReply" type="button">업데이트</button>
+																		
+																		</span>
+																	</div>
+																</form>
+															</div>
+													<h6 style="color:red; margin-top:2%" id="msg_${board.no }"  ></h6>
+															
+														</c:if>
+														</div>
+													</div> <!-- end timeline-body -->
+												</li>
+											</c:forEach>
+
+
+										</ul>
+										<div style="margin:0px auto;"></div>
+	<c:forEach items="${ pageList }" var="page" varStatus="loop">
+		<div style="width: 5%; float:left" >
+			<a href="<%=request.getContextPath() %>/board/viewBoard.do?page=${page}">${page} </a>
+		</div>	
+	
+	</c:forEach>
+										
+										
+										<!-- end timeline -->
+									</div>
+									<!-- end #profile-post tab -->
+								</div>
+								<!-- end tab-content -->
+							</div>
+							<!-- end profile-content -->
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 
+	
 
 
 

@@ -112,7 +112,7 @@
                 <textarea class="form-control" name="message" rows="5" placeholder="게시글" required></textarea>
               </div>
   
-              <button style="margin-top:2%;" type="button" class="btn btn-primary">업로드</button>
+              <button style="margin-top:2%;" type="submit" class="btn btn-primary">업로드</button>
             </form>
           </div>
 

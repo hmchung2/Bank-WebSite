@@ -21,11 +21,16 @@ public class ViewAccountController implements Controller {
 		String url = "";
 		String msg = "";
 		if(userVO == null) {
-			msg = "계좌를 확인 하기 위해서는  <br> 우선 로그인이 필요 합니다.";
+			msg = "계좌를 확인 하기 위해서는  <br> WC 로그인이 필요 합니다.";
 			url = "/member/signin.do";		
 			session.setAttribute("msg", msg);
 			session.setAttribute("destination",  "/bank/viewAccount.do");
-		}else {
+		}else if(userVO.getUser_type().equals("2")) {
+			session.setAttribute("msg", "카카오 유저는 사용 불가 입니다.");
+			url = "/index.jsp";
+		}
+		
+		else{
 			String id = userVO.getId();
 			AccountDAO dao = new AccountDAO();			
 			List<AccountVO> list = dao.selectAllAccounts(id);

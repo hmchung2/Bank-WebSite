@@ -41,8 +41,12 @@
  
  <script>
  // 스크립트 작성은 여기서
+
+ 
  
  $(document).ready(function() {
+
+	 
 	 console.log('${list}')
 	 
 	 $('.viewLog').click(function(){
@@ -160,7 +164,30 @@
 		
 		
 		
-		
+		<button id="myModal" hidden="true">모달창</button>
+		<div class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Wells & Clarify</h5>
+						<button type="button" class="close exiting" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+
+					<div class="modal-body">
+						<img src="<%=request.getContextPath()%>/assets/img/illustration-6.svg"
+							style="width: 250px; height: 200px;">
+						<p id="sendingMyMsg" style="font-size: 30px"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary exiting">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		
 		

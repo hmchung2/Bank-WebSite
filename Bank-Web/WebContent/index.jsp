@@ -1,8 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
+
     
 <!DOCTYPE html>
 <html lang="ko">
+
+<%
+	String msg = (String)session.getAttribute("msg");
+	session.removeAttribute("msg");
+	System.out.println(msg);
+	pageContext.setAttribute("msg", msg);
+	
+%>
 
 <head>
   <meta charset="utf-8">
@@ -38,6 +48,24 @@
   ======================================================== -->
 <script src="<%=request.getContextPath()%>/assets/js/jquery-3.6.0.min.js"></script>
 <script src="<%=request.getContextPath()%>/assets/js/myFunc.js"></script>
+<script>
+$(document).ready(function() {
+	 $("#myModal").click(function(){
+		  $(".modal").fadeIn();
+	  });		  
+	  $(".exiting").click(function(){
+		  $(".modal").fadeOut();
+	  })			
+	
+	if('${msg}' !=  ""){
+		console.log('${msg}')	
+		$("#sendingMyMsg").html('${msg}')
+		$("#myModal").trigger("click");	
+	}
+})
+
+</script>
+
 </head>
 <body>
 
@@ -60,18 +88,18 @@
 						원자성, 일관성, 격리성, 영속성을 보유한 <br> Transaction 시스템
 					</h2>
 					<div data-aos="fade-up" data-aos-delay="800">
-						<a href="#about" class="btn-get-started scrollto">시작하기</a>
+						<a href="<%=request.getContextPath() %>/bank/createAccount.do" class="btn-get-started scrollto">시작하기</a>
 					</div>
 
 					<div class="btn-group" style="top:10px;">
-						<a href="#" class="btn btn-primary active" aria-current="page">통합계좌 <br>
+						<a href="<%=request.getContextPath() %>/total/viewTotal.do" class="btn btn-primary active" aria-current="page">통합계좌 <br>
 						<span id="option-symbol">
 						☁
 						</span>	
 						</a>
-						<a href="#" class="btn btn-primary">조회 <br> 
+						<a href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn btn-primary">조회 <br> 
 							<span id="option-symbol">₩ </span></a> 
-						<a href="#" class="btn btn-primary">이체 <br> 
+						<a href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn btn-primary">이체 <br> 
 						<span id="option-symbol">➧ </span></a>
 					</div>
 				</div>
@@ -162,6 +190,33 @@
       </div>
     </section><!-- End About Us Section -->
   </main><!-- End #main -->
+  
+  
+		<button id="myModal" hidden="true">모달창</button>
+		<div class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Wells & Clarify</h5>
+						<button type="button" class="close exiting" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+
+					<div class="modal-body">
+						<img src="<%=request.getContextPath()%>/assets/img/illustration-6.svg"
+							style="width: 250px; height: 200px;">
+						<p id="sendingMyMsg" style="font-size: 30px"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary exiting">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+  
   <!-- ======= Footer ======= -->
   <footer id="footer">
   	<jsp:include page="/include/footer.jsp" />

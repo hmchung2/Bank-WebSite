@@ -40,7 +40,7 @@
         <ul>
 
           <li><a class="nav-link active" href="<%=request.getContextPath() %>/index.jsp">Home</a></li>
-          <li><a class="nav-link" >게시판</a></li>
+          <li><a class="nav-link" href="<%=request.getContextPath() %>/board/viewBoard.do" >게시판</a></li>
           <li><a class="nav-link" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌</a></li>
           <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/viewAccount.do">계좌 조회</a></li>
           <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/createAccount.do">WC 계좌 개설</a></li>        

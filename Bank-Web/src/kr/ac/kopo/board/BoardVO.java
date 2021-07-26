@@ -13,10 +13,6 @@ public class BoardVO {
 	private String message;
 	private List<BoardReplyVO> replyList;
 
-
-	
-	
-
 	@Override
 	public String toString() {
 		return "BoardVO [no=" + no + ", title=" + title + ", writer=" + writer + ", viewCnt=" + viewCnt + ", regDate="
