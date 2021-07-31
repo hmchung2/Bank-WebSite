@@ -18,8 +18,10 @@ public class FrontControllerServlet extends HttpServlet{
 	@Override
 	public void init(ServletConfig config) throws ServletException{
 		String propLoc = config.getInitParameter("propertyLocation");
+		System.out.println(propLoc);
 		if(propLoc != null){			
 			mappings = new HandlerMapping(propLoc);
+			System.out.println("success");
 		} else {
 			System.out.println("Cant read propLoc");
 			mappings = new HandlerMapping();

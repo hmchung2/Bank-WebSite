@@ -226,6 +226,8 @@
  		
  	}) */
  		
+
+ 	
  	
  	
  	$("#send").click(function(){
@@ -282,6 +284,7 @@
  		 				 		$('#toConfirm').hide()
 								$('#loading-motion').hide()
 								//$('#sendEmail').show()
+								sendMessage()
 								
  		 				 	} 		 					
  		 				},
@@ -343,7 +346,38 @@
 			}) 				 				
  	}
  
- 
+ 	function sendMessage(){ 
+ 		fromAccNum = '${fromAcc.accNum }'
+ 		toAccNum = $("#toAccNum").val();
+		phone = '${userVO.phone}'		
+ 		toBankName = $("#toBank").val();
+ 		amount = $("#sendAmount").val();
+ 		fromBankName = '${fromBankName}'
+ 			$.ajax({
+	 				type: 'post',
+	 				url : "/Bank-Web/SendTextMsgServlet",
+	 				data : {
+	 					phone : phone,
+	 					fromAccNum : fromAccNum,
+	 					toAccNum : toAccNum,
+	 					toBankName : toBankName,
+	 					fromBankName : fromBankName,
+	 					amount : amount,
+	 				},
+	 				contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+	 				datatype: 'json',
+	 				success : function(data){
+	 					data = JSON.parse(data)
+	 					console.log(data) 		 					
+	 				},
+	 				error : function(){
+	 					console.log("fail")  					
+	 				} 				
+	 			}) 	
+	
+ 	}
+ 	
+ 	
  </script>
 
 
@@ -440,7 +474,6 @@
 								<div id="middleMsg" style="color: red; font-size: 17px;"></div>
 								<a href="#" class="btn-buy" id="send"> 보내기</a>
 								<a  href="<%=request.getContextPath() %>/bank/viewAccount.do" class="btn-buy" id="goback" style="background-color:red; color:white; "> 돌아가기</a>
-								<button id="sendEmail">이메일 보내기</button>								
 							</div>
 						</div>
 						 <div id="loading-motion" style="margin:0px auto;" class="loader"></div>

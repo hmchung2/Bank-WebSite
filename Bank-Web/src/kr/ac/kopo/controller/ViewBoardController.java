@@ -27,14 +27,24 @@ public class ViewBoardController implements Controller {
 		System.out.println("board page : " + page);
 		List<BoardVO> list = dao.selectAllBoard();					
 		int counts = list.size();
+		System.out.println("size: " + counts);
 		if(counts > 3) {
-			int pageCounts = (int) Math.ceil(  counts / 3   );		
+			int pageCounts = (int) Math.ceil((double)  counts / 3   );		
+			if(page > pageCounts ){
+				page = pageCounts;
+			}
+			
+			System.out.println("pageCounts : " + pageCounts);
+			
 			List<String> pageList = new ArrayList<String>();		
 			for(int i = 1 ; i <= pageCounts ; i ++) {
 				pageList.add( String.valueOf(i) );
 			}
-			System.out.println("page length : " + pageCounts);
-			list = list.subList(page - 1, page - 1 + 3);
+			
+			System.out.println("page list length : "  + pageList.size() );
+			int lastPage = (page - 1)*3 + 3 > counts ? counts  :  (page - 1)*3 + 3 ;
+			
+			list = list.subList((page - 1)*3, lastPage);
 			request.setAttribute("pageList", pageList);	
 		} 
 		request.setAttribute("list", list);	

@@ -38,12 +38,30 @@
 
       <nav id="navbar" class="navbar">
         <ul>
+        
+        <li><a class="nav-link active" href="<%=request.getContextPath() %>/index.jsp">Home</a></li>
+        
+        
+                  <li><a class="nav-link" href="<%=request.getContextPath() %>/board/viewBoard.do" >게시판</a></li>
+        
+        
+          <li class="dropdown"><a href="#"><span>WC 계좌</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/viewAccount.do">WC 계좌 조회</a></li>
+              <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/createAccount.do">WC 계좌 개설</a></li>
 
-          <li><a class="nav-link active" href="<%=request.getContextPath() %>/index.jsp">Home</a></li>
-          <li><a class="nav-link" href="<%=request.getContextPath() %>/board/viewBoard.do" >게시판</a></li>
-          <li><a class="nav-link" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌</a></li>
-          <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/viewAccount.do">계좌 조회</a></li>
-          <li><a class="nav-link" href="<%=request.getContextPath() %>/bank/createAccount.do">WC 계좌 개설</a></li>        
+            </ul>
+          </li>
+        
+          <li class="dropdown"><a href="#"><span>통합 계좌</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a class="nav-link" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌 개설</a></li>
+              <li><a class="nav-link" href="<%=request.getContextPath() %>/total/viewTotal.do"> 통합계좌 조회</a></li>
+            </ul>
+          </li>
+        
+
+          
           <c:if test="${ empty userVO }">
           	<li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signcontract.do">회원가입</a></li>
           	<li><a class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signin.do">로그인</a></li>
@@ -52,7 +70,8 @@
           	<c:if test="${ userVO.user_type eq '2'}">
           		<li><a id="my-log-out" onclick="kakao_log()" class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signout.do">KAKAO 로그아웃</a></li>
           	</c:if>         	
-         	<c:if test="${ userVO.user_type ne '2' }" >         	
+         	<c:if test="${ userVO.user_type ne '2' }" >
+         		 <li><a id="my-log-out" class="nav-link scrollto" href="<%=request.getContextPath() %>/member/updateUserInfo.do">WC 정보 수정</a></li>       	
           		<li><a id="my-log-out" class="nav-link scrollto" href="<%=request.getContextPath() %>/member/signout.do">WC 로그아웃</a></li>
           	</c:if>          	
              <li style="color:#3498db"><a class="nav-link scrollto" href="#">${userVO.name } 님 환영합니다.</a></li>          	          

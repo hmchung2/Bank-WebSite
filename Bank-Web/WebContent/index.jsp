@@ -116,28 +116,22 @@ $(document).ready(function() {
 
   <main id="main">
 
-    <!-- ======= Clients Section ======= -->
+     <!-- ======= Clients Section ======= -->
     <section id="clients" class="clients clients">
       <div class="container">
 
         <div class="row">
 
-          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
+          <div class="col-lg-2 col-md-4 col-6">
             <img src="assets/img/clients/client-1.png" class="img-fluid" alt="" data-aos="zoom-in">
-    		<br>
-            본성은행
           </div>
 
-          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
+          <div class="col-lg-2 col-md-4 col-6">
             <img src="assets/img/clients/client-2.png" class="img-fluid" alt="" data-aos="zoom-in" data-aos-delay="100">
-            <br>
-            민기은행
           </div>
 
-          <div class="col-lg-2 col-md-4 col-6" style="color:#3498db">
+          <div class="col-lg-2 col-md-4 col-6">
             <img src="assets/img/clients/client-3.png" class="img-fluid" alt="" data-aos="zoom-in" data-aos-delay="200">
-            <br>
-            민영은행
           </div>
 
           <div class="col-lg-2 col-md-4 col-6">
@@ -157,6 +151,7 @@ $(document).ready(function() {
       </div>
     </section><!-- End Clients Section -->
 
+
     <!-- ======= About Us Section ======= -->
     <section id="about" class="about">
       <div class="container">
@@ -168,22 +163,23 @@ $(document).ready(function() {
         <div class="row content">
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+              WC 은행은 미래 기술을 누구나 손쉽게 사용할 수 있도록 기술플랫폼으로서의 변화를 추구하며,
+수많은 개인과 다양한 파트너들이 성공이라는 꽃을 피울 수 있도록 경쟁력을 키우며 다가올 미래를 준비하겠습니다
             </p>
             <ul>
-              <li><i class="ri-check-double-line"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
-              <li><i class="ri-check-double-line"></i> Duis aute irure dolor in reprehenderit in voluptate velit</li>
-              <li><i class="ri-check-double-line"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
+              <li><i class="ri-check-double-line"></i> 기업의 지속가능한 성장과 발전의 근간은 투명하고 건전한 지배구조입니다</li>
+              <li><i class="ri-check-double-line"></i> 올바른 경영의 방향을 확립하고, 고객, 주주, 임직원을 비롯한 다양한 파트너들과 가치를 공유하며 더욱 신뢰받는 기업으로 거듭나겠습니다.</li>
+              <li><i class="ri-check-double-line"></i> 프로젝트 꽃은 SME와 크리에이터의 가치를 발견하고 지속 가능한 성공을 응원하는 WC의 핵심캠페인입니다.</li>
             </ul>
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="300">
             <p>
-              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-              culpa qui officia deserunt mollit anim id est laborum.
+              WC 은행은 기술플랫폼으로서 첨단 기술을 누구나 쉽게 활용할 수 있는 일상의 친숙한 서비스로 제공하기 위해
+				변화를 추구하고, 이용자와 호흡하며 항상 새로운 도전을 시도합니다.
+				WC 은행은  사용자의 검색 의도와 맥락을 깊이 이해하는 검색 서비스를 중심으로 개인의 다양한 관심사를 이어갈 수 있는 콘텐츠 주제판을 제공하고 있습니다.
+				또한 매일 다양한 사용자의 생각과 관심사를 연결하고, 새로운 기회를 만들어가는 플랫폼이 되고자 크고 작은 변화들을 이어가고 있습니다.
             </p>
-            <a href="#" class="btn-learn-more">Learn More</a>
+            <a href="#" class="btn-learn-more">더 배우기</a>
           </div>
         </div>
 

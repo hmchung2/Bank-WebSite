@@ -129,6 +129,27 @@ public class MemberDao {
 		}			
 		return result;
 	}
+	
+	public void updatePwd(MemberVO member){
+		StringBuilder sql = new StringBuilder();
+		sql.append("update WC_USER@WCLINK set PASSWORD = ? WHERE ID = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+		) { 
+			pstmt.setString(1 , member.getPwd() );
+			pstmt.setString(2 , member.getId() );			
+			int rowCnt = pstmt.executeUpdate();
+			if(rowCnt == 1){
+				System.out.println("password update sucess");
+			}else{
+				System.out.println("password update failed");
+			}
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}		
+	
+	}
 			
 	public boolean signUp(MemberVO member) {
 		Boolean result = false;

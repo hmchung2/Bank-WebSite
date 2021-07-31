@@ -11,7 +11,7 @@ public class HandlerMapping {
 private Map<String, Controller> mappings;
 	
 	public HandlerMapping() {
-		this("C:\\Users\\hmchu\\git\\Bank-WebSite\\Bank-Web\\bean.properties");
+		this("C:/Users/hmchu/git/Bank-WebSite/Bank-Web/bean.properties");
 		
 	}
 

@@ -705,13 +705,19 @@ select.form-control:not([size]):not([multiple]) {
 <script>
  // 스크립트 작성은 여기서
  $(document).ready(function(){
-	 
+	 $('.modal2').fadeOut();
 	 $("#myModal").click(function(){
-		  $(".modal").fadeIn();
+		  $(".modal1").fadeIn();
 	  });		  
 	  $(".exiting").click(function(){
 		  $(".modal").fadeOut();
 	  })	
+	  
+	  $(".exiting2").click(function(){
+		  $(".modal2").fadeOut();
+	  })	
+	  
+	  
 	 
 	 $('.updateReply').trigger("click")
 
@@ -721,7 +727,42 @@ select.form-control:not([size]):not([multiple]) {
 		
 	})
 	
+/* 	   <input id="deletePw" type="password">
+	
+      	<input type="hidden" id="deletingNo"> */
+	
+	$('#deletingConfirm').click(function(){ 
+		$.ajax({
+			type: 'post',
+			url : "/Bank-Web/DeleteCommentServlet",
+			data :{
+				board  : $('#deletingNo').val(),
+				pw :  $('#deletePw').val(),
+			},
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			datatype: 'json',
+			success : function(data){
+				console.log("success")
+				console.log(data)
+		
+				if(data.result == 'fail'  ){
+					$("#sendingMyMsg").text(data.msg )
+					$("#myModal").trigger("click");		
+				}else{
+					window.location.reload();
+				}
+												
+			},
+			error : function(){			
+				console.log("실패")				
+			} 						
+		}) 				 			
+	})
+	
  })
+ 
+ 
+ 
  	function writeReply(index){
 		
 		if('${userVO}' == null  || '${userVO}' == "" ){
@@ -759,8 +800,12 @@ select.form-control:not([size]):not([multiple]) {
 			}	
 		}
 	 	
-		
- 
+	function deleteComment(index){
+		$('#deletingNo').val(index)
+		$('.modal2').fadeIn();		
+	}
+	
+	
  	function showReply(index){	   
  		id =   "#index_" +  index
  		$.ajax({
@@ -810,6 +855,7 @@ select.form-control:not([size]):not([multiple]) {
 </head>
 
 <body>
+
 	<!-- ======= Header ======= -->
 	<header id="header" class="fixed-top d-flex align-items-center">
 		<jsp:include page="/include/header.jsp" />
@@ -872,6 +918,8 @@ select.form-control:not([size]):not([multiple]) {
 																class="pull-right text-muted">${board.title }</span>
 														</div>
 														<div class="timeline-content">
+														<button onclick="deleteComment(${board.no})" style="float:right;" type="button" class="btn-close" aria-label="Close">
+														</button>
 															<h2>${board.title }</h2>
 															<p>${board.message}</p>
 														</div>
@@ -957,7 +1005,7 @@ select.form-control:not([size]):not([multiple]) {
 
 	
 		<button id="myModal" hidden="true">모달창</button>
-		<div class="modal" tabindex="-1" role="dialog">
+		<div class="modal1 modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -980,6 +1028,32 @@ select.form-control:not([size]):not([multiple]) {
 				</div>
 			</div>
 		</div>
+		
+		<div class="modal2 modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">댓글 삭제</h5>
+		        <button type="button" class="close exiting2" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	비밀번호 : 
+		        <input id="deletePw" type="password">
+		      </div>
+		      <div class="modal-footer">
+		      	<input type="hidden" id="deletingNo">
+		        <button type="button" class="btn btn-secondary exiting2" data-dismiss="modal">취소</button>
+		        <button type="button" class="btn btn-primary exiting2" id="deletingConfirm">삭제</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+				
+
+
+
 
 
 

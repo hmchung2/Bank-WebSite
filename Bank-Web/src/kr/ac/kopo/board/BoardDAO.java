@@ -47,6 +47,51 @@ public class BoardDAO {
 		}		
 	}
 	
+	public void deleteBoard(int no){
+		StringBuilder sql = new StringBuilder();
+		sql.append("delete from WC_BOARD@WCLINK where index_order = ?");
+		try (Connection conn = new ConnectionFactory().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());){
+			pstmt.setInt(1, no);
+			pstmt.executeUpdate();	
+		}catch (Exception e) {
+			e.printStackTrace();
+		}		
+	
+	}
+	
+	public BoardVO selectOneBoard(int no){
+		BoardVO board = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select index_order, REG_DATE, ID, TITLE , VIEW_COUNT, MESSAGE ");
+		sql.append("  from WC_BOARD@WCLINK WHERE index_order = ?  ");
+		try (Connection conn = new ConnectionFactory().getConnection();
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());){			
+			pstmt.setInt(1, no);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()){
+				board = new BoardVO();
+				String title = rs.getString("TITLE");
+				String writer = rs.getString("ID");
+				int viewCnt = rs.getInt("VIEW_COUNT");
+				String message = rs.getString("MESSAGE");
+				String regDate = rs.getString("REG_DATE");
+				board.setNo(no);
+				board.setTitle(title);
+				board.setWriter(writer);
+				board.setViewCnt(viewCnt);
+				board.setMessage(message);
+				board.setRegDate(regDate);			
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return board;		
+	}
+	
+	
+	
+	
 	
 	public List<BoardVO> selectAllBoard(){
 		List<BoardVO> list = new ArrayList<BoardVO>();

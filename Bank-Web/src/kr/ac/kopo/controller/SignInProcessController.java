@@ -13,6 +13,7 @@ public class SignInProcessController implements Controller{
 	public String handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("utf-8");
+		System.out.println("signin process");
 		String id       = request.getParameter("login_id");
 		String password = request.getParameter("login_pw");
 		String destination =  request.getParameter("destinationParam");

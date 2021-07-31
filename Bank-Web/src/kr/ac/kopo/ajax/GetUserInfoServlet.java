@@ -31,6 +31,8 @@ public class GetUserInfoServlet extends HttpServlet {
 		response.setContentType("text/html; charset=utf-8");		
 		String userId = request.getParameter("userId");
 		String bankName = request.getParameter("bankName");
+	
+		
 		System.out.println(userId);
 		System.out.println(bankName);
 		AccountDAO dao = new AccountDAO();
