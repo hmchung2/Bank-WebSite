@@ -91,19 +91,31 @@
             <i class="ri-bank-card-fill"></i>
             
             <c:if test="${log.action eq 'W' }">
-            	<h4>입금</h4>
+            	<h4>출금</h4>
             </c:if>
              <c:if test="${log.action eq 'D' }">
-            	<li><h4>출금</h4></li>
+            	<li><h4>입금</h4></li>
             </c:if>
             	이체일 : ${log.logDate }
           </div>
           <div class="col-lg-7">            
             <ul>
-            	<li>거래 은행 : ${log.otherAccNum }</li>
-            	<li>거래 계좌번호 : ${log.otherBankNum} </li>
-            	<li>거래량 : ${log.amount}</li>
-            	<li>거래전 후 잔금 : ${log.postBalance }</li>            	
+            	<c:if test="${log.otherBankNum eq '600' }">
+            		<li>거래 은행 : 세진저축은행 SEJINSAVING </li>
+            	</c:if>
+            	<c:if test="${log.otherBankNum eq '700' }">
+            		<li>거래 은행 : WC </li>
+            	</c:if>
+            	<c:if test="${log.otherBankNum eq '800' }">
+            		<li>거래 은행 : MG구마을금고 </li>
+            	</c:if>
+            	<c:if test="${log.otherBankNum eq '900' }">
+            		<li>거래 은행 : TVA </li>
+            	</c:if>
+            	<li>거래 계좌번호 : ${log.otherAccNum }</li>
+            	<li>거래량 : ${log.amount} </li>
+            	<li>거래전 잔금 : ${log.preBalance }</li>
+            	<li>거래후 잔금 : ${log.postBalance}</li>            	
             </ul>                        
           </div>
         </div><!-- End F.A.Q Item-->

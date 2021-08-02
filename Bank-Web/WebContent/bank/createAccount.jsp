@@ -226,7 +226,7 @@
 					}
 				})			
 			}else{
-				("#sendingMyMsg").html(msg)
+				$("#sendingMyMsg").html(msg)
 				$("#myModal").trigger("click");
 			}		
 		}) 		
