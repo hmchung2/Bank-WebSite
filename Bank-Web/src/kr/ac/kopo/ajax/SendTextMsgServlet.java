@@ -43,13 +43,12 @@ public class SendTextMsgServlet extends HttpServlet {
 		String msg = accNum  + " " + fromBankName + " 계좌 에서 " + otherAccNum +  " " + toBankName + " 은행 계좌로 "+ amount + "원이 이체 되었습니다";
 		
 			
-		String api_key = "api-key";
-	    String api_secret = "api-secret";
+		String api_key = "API 키 coolSMS 웹 사이트에 회원가입 필요";
+	    String api_secret = "API 시크릿 키 coolSMS 웹 사이트에 회원가입 필요";
 	    Message coolsms = new Message(api_key, api_secret);
-
 	    // 4 params(to, from, type, text) are mandatory. must be filled
 	    HashMap<String, String> params = new HashMap<String, String>();
-	    params.put("to", "01091192831");	// 수신전화번호
+	    params.put("to", phoneNumber);	// 수신전화번호
 	    params.put("from", "01091192831");	// 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 	    params.put("type", "SMS");
 	    params.put("text", msg );
