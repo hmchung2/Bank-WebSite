@@ -9,10 +9,10 @@
 
 ## 프로그램 실행 방법
 
-# oracle DB 필요
+### oracle DB 필요
 
-# 자기 자신 혹은 다른 db 에게 db링크 연결 필요
-# 시스템 계정에서 실행
+### 자기 자신 혹은 다른 db 에게 db링크 연결 필요
+### 시스템 계정에서 실행
 시스템 계정에서 사용자 계정으로 링크
 
 create public database link wclink connect to 사용자아이디 identified by "비밀번호" using
