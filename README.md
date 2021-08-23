@@ -23,7 +23,6 @@ create public database link wclink connect to 사용자아이디 identified by "
 
 
 # 사용자 계정에서 실행
-DROP TABLE WC_USER CASCADE CONSTRAINTS;
 create table wc_user(
     ID VARCHAR2(30) PRIMARY KEY,
     PASSWORD VARCHAR2(30) NOT NULL,
@@ -39,8 +38,6 @@ create table wc_user(
     USER_TYPE CHAR(1) NOT NULL CONSTRAINT WC_USER_TYPE_CK CHECK (USER_TYPE IN ('1','2','3'))    
 );
 
-
-SELECT * FROM WC_USER;
 CREATE TABLE WC_ACCOUNT(
     ACC_NUM VARCHAR2(30) PRIMARY KEY,
     NICK VARCHAR2(100),
